@@ -3,6 +3,8 @@ SC_MODULE(fir){
     sc_in<bool> clk, rst;
     sc_in<sc_int<16>> inp;
     sc_out<sc_int<16>> outp;
+    sc_in<bool> inp_vld, outp_rdy;
+    sc_out<bool> inp_rdy, outp_vld;
     
     //keep the module down to declaring ports, threads and constructors and leave all the behavioural functionality to other files
     void fir_main();

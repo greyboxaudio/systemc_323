@@ -2,6 +2,7 @@
 void tb::source(){
     //Reset
     inp.write(0);
+    inp_vld.write(0);
     rst.write(1);
     wait();
     rst.write(0);
@@ -14,19 +15,31 @@ void tb::source(){
         {
             tmp=256;
         }
-        else{
+        else
             tmp=0;
-        }
+        //handshake
+        inp_vld.write(1);
         inp.write(tmp);
-        wait();
+        //do-while loop. continually wait until expression becomes true
+        do{
+            wait();
+        } while (!inp_rdy.read());
+        inp_vld.write(0);
     }
 }
 void tb::sink(){
     sc_int<16> indata; //read values on outp port
+    outp_rdy.write(0);
     for (int i = 0; i < 64; i++)
     {
+        outp_rdy.write(1);
+        do
+        {
+            wait();
+        } while (!outp_vld.read());
         indata = outp.read();
-        wait();
+        outp_rdy.write(0);
+        
         cout << i << " :\t" <<
             indata.to_int() << endl; //write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
     }
