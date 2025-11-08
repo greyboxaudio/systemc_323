@@ -35,12 +35,14 @@
 }*/
 void tb::sink()
 {
-    sc_uint<8> indata; // read values on outp port
+    sc_uint<8> indata0; // read values on outp port
+    sc_uint<8> indata1;
     for (int i = 0; i < 259; i++)
     {
-        indata = outp.read();
+        indata0 = outp0.read();
+        indata1 = outp1.read();
 
-        cout << i << " :\t" << indata.to_int() << endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
+        cout << i << " :\t" << indata0.to_int() <<" " << indata1.to_int() << endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
         wait();
     }
     sc_stop(); // end simulation
