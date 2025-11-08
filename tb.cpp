@@ -26,6 +26,10 @@ void tb::source(){
         } while (!inp_rdy.read());
         inp_vld.write(0);
     }
+    //Guard condition for hanging simulation
+    wait(10000);
+    printf("Hanging simulation stopped by TB source thread");
+    sc_stop();
 }
 void tb::sink(){
     sc_int<16> indata; //read values on outp port
@@ -39,7 +43,7 @@ void tb::sink(){
         } while (!outp_vld.read());
         indata = outp.read();
         outp_rdy.write(0);
-        
+
         cout << i << " :\t" <<
             indata.to_int() << endl; //write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
     }
