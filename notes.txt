@@ -1,0 +1,5 @@
+Handshaking
+inp_vld: moduleA tells moduleB that the data present at the input of moduleB is valid
+inp_rdy: moduleB tells moduleA that it is ready to receive new data
+outp_vld: moduleB tells moduleA that the data present at the output of moduleB is valid
+outp_rdy: moduleA tells moduleB that it is ready to receive new data
