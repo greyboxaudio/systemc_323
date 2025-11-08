@@ -21,7 +21,7 @@ SC_MODULE(SYSTEM)
 
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
-        : clk_sig("clk_sig", 10, SC_NS) //(character pointer string,period units,actual units)
+        : clk_sig("clk_sig", 122, SC_NS) //(character pointer string,period units,actual units)
     {
         tb0 = new tb("tb0"); //"new" operator allocates memory space for module
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
