@@ -1,5 +1,5 @@
 #include "tb.h"
-void tb::source()
+/*void tb::source()
 {
     // Reset
     inp.write(0);
@@ -9,7 +9,7 @@ void tb::source()
     rst.write(0);
     wait();
 
-    sc_int<16> tmp; // temporary variable that gets sent to the fir module
+    sc_uint<8> tmp; // temporary variable that gets sent to the fir module
     for (int i = 0; i < 64; i++)
     {
         if (i > 23 && i < 29)
@@ -32,12 +32,12 @@ void tb::source()
     wait(10000);
     printf("Hanging simulation stopped by TB source thread");
     sc_stop();
-}
+}*/
 void tb::sink()
 {
-    sc_int<16> indata; // read values on outp port
+    sc_uint<8> indata; // read values on outp port
     outp_rdy.write(0);
-    for (int i = 0; i < 64; i++)
+    for (int i = 0; i < 384; i++)
     {
         outp_rdy.write(1);
         do

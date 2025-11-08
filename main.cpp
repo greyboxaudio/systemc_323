@@ -1,18 +1,18 @@
 #include <systemc.h>
-#include "fir.h"
 #include "tb.h"
+#include "count8.h"
 
 SC_MODULE(SYSTEM)
 {
     // instantiate fir and testbench modules
     tb *tb0;
-    fir *fir0;
+    count8 *counter0;
     // declare signals
-    sc_signal<sc_int<16>> inp_sig;
+    /*sc_signal<sc_uint<8>> inp_sig;
     sc_signal<bool> inp_sig_vld;
-    sc_signal<bool> inp_sig_rdy;
+    sc_signal<bool> inp_sig_rdy;*/
 
-    sc_signal<sc_int<16>> outp_sig;
+    sc_signal<sc_uint<8>> outp_sig;
     sc_signal<bool> outp_sig_vld;
     sc_signal<bool> outp_sig_rdy;
 
@@ -26,30 +26,29 @@ SC_MODULE(SYSTEM)
         tb0 = new tb("tb0"); //"new" operator allocates memory space for module
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
         tb0->rst(rst_sig);
-        tb0->inp(inp_sig);
+        /*tb0->inp(inp_sig);
         tb0->inp_vld(inp_sig_vld);
-        tb0->inp_rdy(inp_sig_rdy);
+        tb0->inp_rdy(inp_sig_rdy);*/
 
         tb0->outp(outp_sig);
         tb0->outp_vld(outp_sig_vld);
         tb0->outp_rdy(outp_sig_rdy);
 
-        fir0 = new fir("fir0");
-        fir0->clk(clk_sig);
-        fir0->rst(rst_sig);
-        fir0->inp(inp_sig);
-        fir0->inp_vld(inp_sig_vld);
-        fir0->inp_rdy(inp_sig_rdy);
+        counter0 = new count8("counter0");
+        counter0->clk(clk_sig);
+        counter0->rst(rst_sig);
+        /*counter0->inp_vld(inp_sig_vld);
+        counter0->inp_rdy(inp_sig_rdy);*/
 
-        fir0->outp(outp_sig);
-        fir0->outp_vld(outp_sig_vld);
-        fir0->outp_rdy(outp_sig_rdy);
+        counter0->outp(outp_sig);
+        counter0->outp_vld(outp_sig_vld);
+        counter0->outp_rdy(outp_sig_rdy);
     }
     ~SYSTEM() // destructor
     {
         // free up allocated memory space when the simulation ends
         delete tb0;
-        delete fir0;
+        delete counter0;
     }
 };
 
