@@ -14,7 +14,7 @@ SC_MODULE(and2){
     //runs once when the module is instantiated in the simulation
     SC_CTOR(and2){
         //define Thread. A thread is a function made to act like a hardware process
-        //SC_METHOD executes once every sensitivity event. Runs continuously.
+        //SC_METHOD executes once every sensitivity event. Runs continuously. Executes in one cycle.
         SC_METHOD (func);
         //enable clock on positive edge
         sensitive << clk.pos();
