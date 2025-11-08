@@ -45,19 +45,19 @@ SC_MODULE(SYSTEM)
         fir0->outp_vld(outp_sig_vld);
         fir0->outp_rdy(outp_sig_rdy);
     }
-
-    SYSTEM *top = NULL; // declare instance pointer called "top" and send that pointer to NULL
-    int sc_main(int argc, char *argv[]) // declare systemc main function as int, so that it can return something.
-    {
-        top = new SYSTEM("top");
-        sc_start(); // start simulation
-        return 0;
-    }
-    
     ~SYSTEM() // destructor
     {
         // free up allocated memory space when the simulation ends
         delete tb0;
         delete fir0;
     }
+};
+
+SYSTEM *top = NULL;                        // declare instance pointer called "top" and send that pointer to NULL
+
+int sc_main(int argc, char *argv[]) // declare systemc main function as int, so that it can return something.
+{
+    top = new SYSTEM("top");
+    sc_start(); // start simulation
+    return 0;
 };
