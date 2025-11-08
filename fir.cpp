@@ -1,3 +1,5 @@
+#include "fir.h"
+
 //Coefficients for each FIR
 const sc_uint<8> coefs[5] = {
     18,
@@ -6,34 +8,31 @@ const sc_uint<8> coefs[5] = {
     77,
     18
 };
+sc_int<16> taps[5]; //array for input values
 
 //FIR Main thread
 //scoping module::thread; fir_main is within the scope of module fir
 //(void) as argument to show explicitely that fir_main has no arguments
 void fir::fir_main(void)
 {
-    sc_int<16> taps[5]; //array for input values
     //reset code
     //reset internal variables
-    //reset outputs
-    outp.write(0);
+    outp.write(0); //reset output
     wait(); //wait for one clock cycle
 
     while(true){
-        //read inputs
-        //algorithm code
-        //write outputs
+        //shift previous input values
         for (int i = 4; i > 0; i--)
         {
             taps[i] = taps[i-1];
         }
-        taps[0]=inp.read();
+        taps[0]=inp.read(); //read input
         sc_int<16> val; //temporary variable to store filter accumulations
         for (int i = 0; i < 5; i++) //multiply & accumulate
         {
             val += coefs[i] * taps[i];
         }
-        outp.write(val);
+        outp.write(val);//write output
         wait();
     }
 }
