@@ -3,9 +3,6 @@ SC_MODULE(count8)
 {
     sc_in<bool> clk, rst;
     sc_out<sc_uint<8>> outp;
-    sc_in<bool> outp_rdy;
-    sc_out<bool> outp_vld;
-
     // keep the module down to declaring ports, threads and constructors and leave all the behavioural functionality to other files
     void count8_main();
 
