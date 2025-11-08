@@ -53,7 +53,7 @@ SC_MODULE(SYSTEM)
     }
 };
 
-SYSTEM *top = NULL;                        // declare instance pointer called "top" and send that pointer to NULL
+SYSTEM *top = NULL; // declare instance pointer called "top" and send that pointer to NULL
 
 int sc_main(int argc, char *argv[]) // declare systemc main function as int, so that it can return something.
 {
