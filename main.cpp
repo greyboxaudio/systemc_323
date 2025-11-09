@@ -1,6 +1,6 @@
 #include <systemc.h>
 #include "tb.h"
-#include "timer8.h"
+#include "timer0.h"
 #include "latchedRom0810.h"
 #include "latchedRom0811.h"
 #include "latchTC1.h"
@@ -9,10 +9,10 @@ SC_MODULE(SYSTEM)
 {
     //modules
     tb *tb0;
-    timer8 *tim0;
+    timer0 *tim0;
     rom0810 *rom0;
     rom0811 *rom1;
-    latch1 *latch0;
+    latchTC1 *latch0;
 
     // declare signals
     sc_clock clk_sig;
@@ -37,7 +37,7 @@ SC_MODULE(SYSTEM)
         tb0->outp2(rom1_outp_sig);
         tb0->outp3(latch0_outp_sig);
 
-        tim0 = new timer8("tim0");
+        tim0 = new timer0("tim0");
         tim0->clk(clk_sig);
         tim0->rst(rst_sig);
         tim0->outp(tim0_outp_sig);
@@ -56,7 +56,7 @@ SC_MODULE(SYSTEM)
         rom1->inp(tim0_outp_sig);
         rom1->outp(rom1_outp_sig);
 
-        latch0 = new latch1("latch0");
+        latch0 = new latchTC1("latch0");
         latch0->clk(clk_sig);
         latch0->rst(rst_sig);
         latch0->enable(latch0_enable_sig=true);
@@ -70,6 +70,7 @@ SC_MODULE(SYSTEM)
         delete tim0;
         delete rom0;
         delete rom1;
+        delete latch0;
     }
 };
 

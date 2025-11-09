@@ -1,6 +1,6 @@
 #include "latchTC1.h"
 
-void latch1::latch1_main(void)
+void latchTC1::latchTC1_main(void)
 {
         sc_uint<8> in_val;
         sc_uint<1> out_val;

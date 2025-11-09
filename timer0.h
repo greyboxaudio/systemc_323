@@ -1,14 +1,14 @@
 #include <systemc.h>
-SC_MODULE(timer8)
+SC_MODULE(timer0)
 {
     sc_in<bool> clk, rst;
     sc_out<sc_uint<8>> outp;
     // keep the module down to declaring ports, threads and constructors and leave all the behavioural functionality to other files
-    void timer8_main();
+    void timer0_main();
 
-    SC_CTOR(timer8)
+    SC_CTOR(timer0)
     {
-        SC_CTHREAD(timer8_main, clk.pos()); // CTHREAD takes the function to execute as ARG1 and the sensitivity as ARG2
+        SC_CTHREAD(timer0_main, clk.pos()); // CTHREAD takes the function to execute as ARG1 and the sensitivity as ARG2
         reset_signal_is(rst, true); // reset condition for the clock thread needs to be on the line immediately after the CTHREAD. reset has two arguments: name of the port, assertion of reset signal (true = high, false =low)
     }
 };
