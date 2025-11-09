@@ -3,6 +3,7 @@
 #include "count8.h"
 #include "rom8.h"
 #include "rom_u46.h"
+#include "invert.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -11,12 +12,16 @@ SC_MODULE(SYSTEM)
     count8 *counter0;
     rom8 *rom0;
     rom_u46 *rom1;
+    invert *invert0;
     // declare signals
-    sc_signal<sc_uint<8>> inp1_sig;
-    sc_signal<sc_uint<8>> inp2_sig;
-    sc_signal<sc_uint<8>> outp1_sig;
-    sc_signal<sc_uint<8>> outp2_sig;
-    sc_signal<sc_uint<8>> outp3_sig;
+    sc_signal<sc_uint<8>> count_outp_sig_u52u53;
+    sc_signal<sc_uint<8>> prom_outp_sig_u46;
+    sc_signal<sc_uint<8>> prom_outp_sig_u47;
+    sc_signal<sc_uint<3>> invert_bitSelect_sig_u66;
+    sc_signal<sc_uint<1>> invert_outp_sig_u66;
+    sc_signal<sc_uint<8>> latch_outp_sig_u42;
+    sc_signal<sc_uint<8>> latch_outp_sig_u43;
+    sc_signal<sc_uint<8>> latch_outp_sig_u59;
 
     sc_signal<bool> rst_sig;
     sc_clock clk_sig;
@@ -28,25 +33,27 @@ SC_MODULE(SYSTEM)
         tb0 = new tb("tb0"); //"new" operator allocates memory space for module
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
         tb0->rst(rst_sig);
-        tb0->outp0(outp2_sig);
-        tb0->outp1(outp3_sig);
+        tb0->outp0(prom_outp_sig_u46);
+        tb0->outp1(prom_outp_sig_u47);
 
         counter0 = new count8("counter0");
         counter0->clk(clk_sig);
         counter0->rst(rst_sig);
-        counter0->outp(outp1_sig);
+        counter0->outp(count_outp_sig_u52u53);
 
         rom0 = new rom8("rom0");
-        rom0->clk(clk_sig);
-        rom0->rst(rst_sig);
-        rom0->inp(outp1_sig);
-        rom0->outp(outp2_sig);
+        rom0->inp(count_outp_sig_u52u53);
+        rom0->outp(prom_outp_sig_u47);
 
         rom1 = new rom_u46("rom1");
-        rom1->clk(clk_sig);
-        rom1->rst(rst_sig);
-        rom1->inp(outp1_sig);
-        rom1->outp(outp3_sig);
+        rom1->inp(count_outp_sig_u52u53);
+        rom1->outp(prom_outp_sig_u46);
+
+        invert0 = new invert("invert0");
+        invert0->inp(count_outp_sig_u52u53);
+        invert_bitSelect_sig_u66 = 1;
+        invert0->bitSelect(invert_bitSelect_sig_u66);
+        invert0->outp(invert_outp_sig_u66);
     }
     ~SYSTEM() // destructor
     {

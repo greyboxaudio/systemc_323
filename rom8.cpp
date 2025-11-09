@@ -6,20 +6,10 @@ const sc_uint<8> data[256] = {
 
 void rom8::rom8_main(void)
 {
-    //reset
-    outp.write(0);
-    wait();
-
-    while (true)
-    {
         sc_uint<8> in_val;
         sc_uint<8> out_val;
 
         in_val = inp.read(); // read input
-
-        out_val += data[in_val];
-
+        out_val = data[in_val];
         outp.write(out_val); // write output
-        wait();
-    }
 }
