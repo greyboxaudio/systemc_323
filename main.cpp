@@ -1,31 +1,30 @@
 #include <systemc.h>
 #include "tb.h"
-#include "count8.h"
-#include "rom8.h"
-#include "rom_u46.h"
-#include "invert.h"
+#include "timer8.h"
+#include "latchedRom0810.h"
+#include "latchedRom0811.h"
+#include "latchTC1.h"
 
 SC_MODULE(SYSTEM)
 {
     //modules
     tb *tb0;
-    count8 *counter0;
-    rom8 *rom0;
-    rom_u46 *rom1;
-    invert *invert0;
+    timer8 *tim0;
+    rom0810 *rom0;
+    rom0811 *rom1;
+    latch1 *latch0;
+
     // declare signals
-    sc_signal<sc_uint<8>> count_outp_sig_u52u53;
-    sc_signal<sc_uint<8>> prom_outp_sig_u46;
-    sc_signal<sc_uint<8>> prom_outp_sig_u47;
-    sc_signal<sc_uint<3>> invert_bitSelect_sig_u66;
-    sc_signal<sc_uint<1>> invert_outp_sig_u66;
-    sc_signal<sc_uint<8>> latch_outp_sig_u42;
-    sc_signal<sc_uint<8>> latch_outp_sig_u43;
-    sc_signal<sc_uint<8>> latch_outp_sig_u59;
-
-    sc_signal<bool> rst_sig;
     sc_clock clk_sig;
-
+    sc_signal<bool> rst_sig;
+    sc_signal<bool> rom0_enable_sig;
+    sc_signal<bool> rom1_enable_sig;
+    sc_signal<bool> latch0_enable_sig;
+    sc_signal<sc_uint<8>> tim0_outp_sig;
+    sc_signal<sc_uint<8>> rom0_outp_sig;
+    sc_signal<sc_uint<8>> rom1_outp_sig;
+    sc_signal<sc_uint<1>> latch0_outp_sig;
+    
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
         : clk_sig("clk_sig", 122, SC_NS) //(character pointer string,period units,actual units)
@@ -33,33 +32,42 @@ SC_MODULE(SYSTEM)
         tb0 = new tb("tb0"); //"new" operator allocates memory space for module
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
         tb0->rst(rst_sig);
-        tb0->outp0(prom_outp_sig_u46);
-        tb0->outp1(prom_outp_sig_u47);
+        tb0->outp0(tim0_outp_sig);
+        tb0->outp1(rom0_outp_sig);
+        tb0->outp2(rom1_outp_sig);
+        tb0->outp3(latch0_outp_sig);
 
-        counter0 = new count8("counter0");
-        counter0->clk(clk_sig);
-        counter0->rst(rst_sig);
-        counter0->outp(count_outp_sig_u52u53);
+        tim0 = new timer8("tim0");
+        tim0->clk(clk_sig);
+        tim0->rst(rst_sig);
+        tim0->outp(tim0_outp_sig);
 
-        rom0 = new rom8("rom0");
-        rom0->inp(count_outp_sig_u52u53);
-        rom0->outp(prom_outp_sig_u47);
+        rom0 = new rom0810("rom0");
+        rom0->clk(clk_sig);
+        rom0->rst(rst_sig);
+        rom0->enable(rom0_enable_sig=true);
+        rom0->inp(tim0_outp_sig);
+        rom0->outp(rom0_outp_sig);
 
-        rom1 = new rom_u46("rom1");
-        rom1->inp(count_outp_sig_u52u53);
-        rom1->outp(prom_outp_sig_u46);
+        rom1 = new rom0811("rom1");
+        rom1->clk(clk_sig);
+        rom1->rst(rst_sig);
+        rom1->enable(rom1_enable_sig=true);
+        rom1->inp(tim0_outp_sig);
+        rom1->outp(rom1_outp_sig);
 
-        invert0 = new invert("invert0");
-        invert0->inp(count_outp_sig_u52u53);
-        invert_bitSelect_sig_u66 = 1;
-        invert0->bitSelect(invert_bitSelect_sig_u66);
-        invert0->outp(invert_outp_sig_u66);
+        latch0 = new latch1("latch0");
+        latch0->clk(clk_sig);
+        latch0->rst(rst_sig);
+        latch0->enable(latch0_enable_sig=true);
+        latch0->inp(tim0_outp_sig);
+        latch0->outp(latch0_outp_sig);
     }
     ~SYSTEM() // destructor
     {
         // free up allocated memory space when the simulation ends
         delete tb0;
-        delete counter0;
+        delete tim0;
         delete rom0;
         delete rom1;
     }
