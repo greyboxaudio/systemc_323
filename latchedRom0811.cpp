@@ -7,16 +7,16 @@ void rom0811::rom8_main(void)
 {
         sc_uint<8> address;
         sc_uint<8> data;
-        outp.write(0);
+        outp0.write(0);
         wait();
 
         while (true)
         {
                 if (enable == true)
                 {
-                        outp.write(data);
+                        outp0.write(data);
                 }
-                address = inp.read();
+                address = inp0.read();
                 data = d0811[address];
                 wait();
         }

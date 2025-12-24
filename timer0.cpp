@@ -7,7 +7,7 @@ void timer0::timer0_main(void)
     sc_uint<8> out_val;
 
     // reset code
-    outp.write(0);
+    outp0.write(0);
     wait();
 
     while (true)
@@ -17,7 +17,7 @@ void timer0::timer0_main(void)
         {
             out_val = 0;
         }
-        outp.write(out_val); // write output
+        outp0.write(out_val); // write output
         wait();
     }
 }

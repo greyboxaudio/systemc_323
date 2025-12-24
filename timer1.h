@@ -3,7 +3,7 @@ SC_MODULE(timer1)
 {
     sc_in<bool> clk, rst;
     //sc_in<sc_uint<8>> syncClear;
-    sc_out<sc_uint<8>> outp;
+    sc_out<sc_uint<8>> outp0;
     // keep the module down to declaring ports, threads and constructors and leave all the behavioural functionality to other files
     void timer1_main();
 
