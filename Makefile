@@ -1,2 +1,2 @@
-main: main.cpp tb.cpp timer0.cpp latchedRom0810.cpp latchedRom0811.cpp latchTC1.cpp
-	gcc -o main main.cpp tb.cpp timer0.cpp latchedRom0810.cpp latchedRom0811.cpp latchTC1.cpp -I . -I /opt/systemc/include -L /opt/systemc/lib -lsystemc -lstdc++ -lm
+main: main.cpp tb.cpp timer0.cpp latchedRom0810.cpp latchedRom0811.cpp latchTC1.cpp timer1.cpp
+	gcc -o main main.cpp tb.cpp timer0.cpp latchedRom0810.cpp latchedRom0811.cpp latchTC1.cpp timer1.cpp -I . -I /opt/systemc/include -L /opt/systemc/lib -lsystemc -lstdc++ -lm

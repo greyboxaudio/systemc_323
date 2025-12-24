@@ -3,7 +3,7 @@ SC_MODULE(latchTC1)
 {
     sc_in<bool> clk, rst, enable;
     sc_in<sc_uint<8>> inp;
-    sc_out<sc_uint<1>> outp;
+    sc_out<bool> outp;
 
     void latchTC1_main();
 

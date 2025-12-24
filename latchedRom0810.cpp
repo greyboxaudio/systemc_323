@@ -8,6 +8,7 @@ void rom0810::rom8_main(void)
         sc_uint<8> address;
         sc_uint<8> data;
         outp.write(0);
+        nSyncClear.write(0);
         wait();
 
         while (true)
@@ -15,6 +16,7 @@ void rom0810::rom8_main(void)
                 if (enable == true)
                 {
                         outp.write(data);
+                        nSyncClear.write(data[0]);
                 }
                 address = inp.read();
                 data = d0810[address];

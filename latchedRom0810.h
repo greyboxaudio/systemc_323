@@ -4,6 +4,7 @@ SC_MODULE(rom0810)
     sc_in<bool> clk, rst, enable;
     sc_in<sc_uint<8>> inp;
     sc_out<sc_uint<8>> outp;
+    sc_out<bool> nSyncClear;
 
     void rom8_main();
 
