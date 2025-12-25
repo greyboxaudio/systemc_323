@@ -1,33 +1,45 @@
 #include <systemc.h>
 #include "tb.h"
 #include "timer0.h"
-#include "timer1.h"
-#include "latchedRom0810.h"
-#include "latchedRom0811.h"
-#include "latchTC1.h"
+#include "dacSlotAddrCount.h"
+#include "timingProms.h"
+#include "byteSplitter.h"
 
 SC_MODULE(SYSTEM)
 {
     //modules
     tb *tb0;
     timer0 *tim0;
-    timer1 *tim1;
-    rom0810 *rom0;
-    rom0811 *rom1;
-    latchTC1 *latch0;
+    dacSlotAddrCount *count0;
+    byteSplitter *split0;
+    byteSplitter *split1;
+    timingProms *timingProms0;
 
     // declare signals
     sc_clock clk_sig;
     sc_signal<bool> rst_sig;
-    sc_signal<bool> rom0_enable_sig;
-    sc_signal<bool> rom1_enable_sig;
-    sc_signal<bool> latch0_enable_sig;
     sc_signal<sc_uint<8>> TC0_7;
     sc_signal<sc_uint<8>> TCB2_7;
     sc_signal<sc_uint<8>> rom0_outp_sig;
     sc_signal<sc_uint<8>> rom1_outp_sig;
     sc_signal<bool> nTCB1;
     sc_signal<bool> nSyncClear;
+    sc_signal<bool> DAC;
+    sc_signal<bool> DACEN;
+    sc_signal<bool> CAS;
+    sc_signal<bool> RAS;
+    sc_signal<bool> SARCK;
+    sc_signal<bool> nS;
+    sc_signal<bool> nMOD;
+    sc_signal<bool> nDACX;
+    sc_signal<bool> ISH;
+    sc_signal<bool> nER;
+    sc_signal<bool> nEL;
+    sc_signal<bool> nEF;
+    sc_signal<bool> nET;
+    sc_signal<bool> MSBE;
+    sc_signal<bool> LSBE;
+    sc_signal<sc_uint<4>> program;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -47,42 +59,50 @@ SC_MODULE(SYSTEM)
         tim0->rst(rst_sig);
         tim0->outp0(TC0_7);
 
-        rom0 = new rom0810("rom0");
-        rom0->clk(clk_sig);
-        rom0->rst(rst_sig);
-        rom0->enable(rom0_enable_sig=true);
-        rom0->inp0(TC0_7);
-        rom0->outp0(rom0_outp_sig);
-        rom0->outp1(nSyncClear);
+        timingProms0 = new timingProms("rom0");
+        timingProms0->clk(clk_sig);
+        timingProms0->rst(rst_sig);
+        timingProms0->inp0(TC0_7);
+        timingProms0->outp0(rom0_outp_sig);
+        timingProms0->outp1(rom1_outp_sig);
+        timingProms0->outp2(nTCB1);
 
-        rom1 = new rom0811("rom1");
-        rom1->clk(clk_sig);
-        rom1->rst(rst_sig);
-        rom1->enable(rom1_enable_sig=true);
-        rom1->inp0(TC0_7);
-        rom1->outp0(rom1_outp_sig);
+        split0 = new byteSplitter("split0");
+        split0->inp0(rom0_outp_sig);
+        split0->outp0(nSyncClear);
+        split0->outp1(DAC);
+        split0->outp2(DACEN);
+        split0->outp3(CAS);
+        split0->outp4(RAS);
+        split0->outp5(SARCK);
+        split0->outp6(nS);
+        split0->outp7(nMOD);
 
-        latch0 = new latchTC1("latch0");
-        latch0->clk(clk_sig);
-        latch0->rst(rst_sig);
-        latch0->enable(latch0_enable_sig=true);
-        latch0->inp0(TC0_7);
-        latch0->outp0(nTCB1);
+        split1 = new byteSplitter("split1");
+        split1->inp0(rom1_outp_sig);
+        split1->outp0(nDACX);
+        split1->outp1(ISH);
+        split1->outp2(nER);
+        split1->outp3(nEL);
+        split1->outp4(nEF);
+        split1->outp5(nET);
+        split1->outp6(MSBE);
+        split1->outp7(LSBE);
 
-        tim1 = new timer1("tim1");
-        tim1->clk(nTCB1);
-        tim1->rst(nSyncClear);
-        tim1->outp0(TCB2_7);
+        count0 = new dacSlotAddrCount("count0");
+        count0->clk(nTCB1);
+        count0->clr(nSyncClear);
+        count0->outp0(TCB2_7);
     }
     ~SYSTEM() // destructor
     {
         // free up allocated memory space when the simulation ends
         delete tb0;
         delete tim0;
-        delete tim1;
-        delete rom0;
-        delete rom1;
-        delete latch0;
+        delete count0;
+        delete split0;
+        delete split1;
+        delete timingProms0;
     }
 };
 
