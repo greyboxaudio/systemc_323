@@ -8,6 +8,7 @@
 #include "modCountClk.h"
 #include "modCount.h"
 #include "bitInvert.h"
+#include "delayDataReg.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -22,13 +23,14 @@ SC_MODULE(SYSTEM)
     modCountClk *modCountClk0;
     modCount *modCount0;
     bitInvert *bitInvert0;
+    delayDataReg *delayDataReg0;
 
     // declare signals
     sc_clock clk_sig;
     sc_signal<bool> rst_sig;
     sc_signal<sc_uint<4>> program, ratlvl, decay, preDelay;
     sc_signal<sc_uint<8>> TC0_7, TCB2_7;
-    sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig;
+    sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig, delayData;
     sc_signal<bool> nTCB1;
     sc_signal<bool> nSyncClear;
     sc_signal<bool> DAC;
@@ -65,7 +67,7 @@ SC_MODULE(SYSTEM)
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
         tb0->rst(rst_sig);
         tb0->outp0(TC0_7);
-        tb0->outp1(TCB2_7);
+        tb0->outp1(delayData);
         tb0->outp2(MC0_12);
         tb0->outp3(MCCK);
         tb0->outp4(nTCB7);
@@ -133,6 +135,16 @@ SC_MODULE(SYSTEM)
         modCount0->clk(MCCK);
         modCount0->outp0(MC0_12);
         modCount0->outp1(MC5_12);
+
+        delayDataReg0 = new delayDataReg("delayDataReg0");
+        delayDataReg0->inp0(nTCB1);
+        delayDataReg0->inp1(nMOD);
+        delayDataReg0->inp2(MODDIS);
+        delayDataReg0->inp3(TCB2_7);
+        delayDataReg0->inp4(MC5_12);
+        delayDataReg0->inp5(preDelay);
+        delayDataReg0->inp6(program);
+        delayDataReg0->outp0(delayData);
     }
     ~SYSTEM() // destructor
     {
@@ -147,6 +159,7 @@ SC_MODULE(SYSTEM)
         delete modCountClk0;
         delete modCount0;
         delete bitInvert0;
+        delete delayDataReg0;
     }
 };
 

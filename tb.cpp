@@ -44,10 +44,8 @@ void tb::sink()
         indata3 = outp3.read();
         indata4 = outp4.read();
 
-        if (indata4 == 0)
-        {
              cout << i << " :\t" << indata0.to_int() <<" " << indata1.to_int()<<" " << indata2.to_int() <<" " << indata3.to_int()<<" " << indata4.to_int()<< endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
-        }
+
         wait();
     }
     sc_stop(); // end simulation
