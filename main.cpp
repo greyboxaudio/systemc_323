@@ -6,6 +6,8 @@
 #include "byteSplitter.h"
 #include "modRateCount.h"
 #include "modCountClk.h"
+#include "modCount.h"
+#include "bitInvert.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -18,12 +20,13 @@ SC_MODULE(SYSTEM)
     dacSlotAddrCount *count0;
     modRateCount *modRateCount0;
     modCountClk *modCountClk0;
+    modCount *modCount0;
+    bitInvert *bitInvert0;
 
     // declare signals
     sc_clock clk_sig;
     sc_signal<bool> rst_sig;
-    sc_signal<sc_uint<4>> program, ratlvl, decay;
-    sc_signal<sc_uint<8>> preDelay;
+    sc_signal<sc_uint<4>> program, ratlvl, decay, preDelay;
     sc_signal<sc_uint<8>> TC0_7, TCB2_7;
     sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig;
     sc_signal<bool> nTCB1;
@@ -46,19 +49,26 @@ SC_MODULE(SYSTEM)
     sc_signal<bool> TCB7, nTCB7;
     sc_signal<bool> SNMODEN, MODDIS;
     sc_signal<bool> carry, MCCK;
+    sc_signal<sc_uint<16>> MC0_12;
+    sc_signal<sc_uint<8>> MC5_12;
+    sc_signal<sc_uint<8>> debug0;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
         : clk_sig("clk_sig", 122, SC_NS) //(character pointer string,period units,actual units)
     {
+        program = 0;
+        preDelay = 0;
+        decay = 0;
+
         tb0 = new tb("tb0"); //"new" operator allocates memory space for module
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
         tb0->rst(rst_sig);
         tb0->outp0(TC0_7);
-        tb0->outp1(rom0_outp_sig);
-        tb0->outp2(rom1_outp_sig);
+        tb0->outp1(TCB2_7);
+        tb0->outp2(MC0_12);
         tb0->outp3(MCCK);
-        tb0->outp4(TCB2_7);
+        tb0->outp4(nTCB7);
 
         tim0 = new timer0("tim0");
         tim0->clk(clk_sig);
@@ -101,6 +111,10 @@ SC_MODULE(SYSTEM)
         count0->outp0(TCB2_7);
         count0->outp1(TCB7);
 
+        bitInvert0 = new bitInvert("bitInvert0");
+        bitInvert0->inp0(TCB7);
+        bitInvert0->outp0(nTCB7);
+
         modRateCount0 = new modRateCount("modRateCount0");
         modRateCount0->inp0(ratlvl);
         modRateCount0->inp1(program);
@@ -108,12 +122,17 @@ SC_MODULE(SYSTEM)
         modRateCount0->outp0(SNMODEN);
         modRateCount0->outp1(MODDIS);
         modRateCount0->outp2(carry);
-        modRateCount0->outp3(nTCB7);
+        modRateCount0->debug(debug0);
 
         modCountClk0 = new modCountClk("modCountClk0");
         modCountClk0->clk(nTCB7);
         modCountClk0->inp0(carry);
         modCountClk0->outp0(MCCK);
+
+        modCount0 = new modCount("modCount0");
+        modCount0->clk(MCCK);
+        modCount0->outp0(MC0_12);
+        modCount0->outp1(MC5_12);
     }
     ~SYSTEM() // destructor
     {
@@ -125,6 +144,9 @@ SC_MODULE(SYSTEM)
         delete split1;
         delete timingProms0;
         delete modRateCount0;
+        delete modCountClk0;
+        delete modCount0;
+        delete bitInvert0;
     }
 };
 

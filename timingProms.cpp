@@ -41,16 +41,16 @@ void timingProms::rom0811(void)
 void timingProms::tc1(void)
 {
         sc_uint<8> in_val;
-        sc_uint<1> out_val;
+        bool out_val;
         outp2.write(1);
         wait();
 
         while (true)
         {
-                outp2.write(out_val);
+                outp2.write(!out_val);
                 sc_uint<8> tmp;
                 tmp = inp0.read();
-                out_val = ~tmp[1];
+                out_val = tmp[1];
                 wait();
         }
 }
