@@ -2,15 +2,32 @@
 SC_MODULE(modRateCount)
 {
     sc_in<bool> clk;
-    sc_in<sc_uint<4>> inp0;
-    sc_in<sc_uint<4>> inp1;
-    sc_out<bool> outp0;
-    sc_out<bool> outp1;
+    sc_in<sc_uint<4>> inp0, inp1;
+    sc_out<bool> outp0, outp1, outp2, outp3;
 
-    void modRateCount_main();
+    const sc_uint<8> d0803[128] = {235,234,233,233,231,231,231,231,231,231,231,231,231,231,231,231,235,233,231,231,229,229,229,229,229,229,229,229,229,229,229,229,236,235,234,234,234,234,234,234,234,234,234,234,234,234,234,234,236,236,236,236,234,234,234,234,234,234,234,234,234,234,234,234,234,232,230,230,228,228,228,228,228,228,228,228,228,228,228,228,234,233,231,231,228,228,228,228,228,228,228,228,228,228,228,228,233,231,229,229,228,228,228,228,228,228,228,228,228,228,228,228,233,230,229,229,228,228,228,228,228,228,228,228,228,228,228,228};
+
+    sc_uint<8> counter{};
+    bool carry{};
+
+    void modRateCount_main(){
+        sc_uint<8> address = inp0.read() + (inp1.read() << 4);
+        sc_uint<8> data = d0803[address];
+        counter += 1;
+        carry = counter[5];
+        if (carry == 1)
+        {
+            counter = data & 15;
+        }
+        outp0.write(data[5]);
+        outp1.write(data[6]);
+        outp2.write(carry);
+        outp3.write(~clk.read());
+    }
 
     SC_CTOR(modRateCount)
     {
-        SC_CTHREAD(modRateCount_main, clk.pos());
+        SC_METHOD(modRateCount_main);
+        sensitive << clk.pos();
     }
 };

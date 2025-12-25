@@ -4,24 +4,28 @@
 #include "dacSlotAddrCount.h"
 #include "timingProms.h"
 #include "byteSplitter.h"
+#include "modRateCount.h"
+#include "modCountClk.h"
 
 SC_MODULE(SYSTEM)
 {
     //modules
     tb *tb0;
     timer0 *tim0;
-    dacSlotAddrCount *count0;
+    timingProms *timingProms0;
     byteSplitter *split0;
     byteSplitter *split1;
-    timingProms *timingProms0;
+    dacSlotAddrCount *count0;
+    modRateCount *modRateCount0;
+    modCountClk *modCountClk0;
 
     // declare signals
     sc_clock clk_sig;
     sc_signal<bool> rst_sig;
-    sc_signal<sc_uint<8>> TC0_7;
-    sc_signal<sc_uint<8>> TCB2_7;
-    sc_signal<sc_uint<8>> rom0_outp_sig;
-    sc_signal<sc_uint<8>> rom1_outp_sig;
+    sc_signal<sc_uint<4>> program, ratlvl, decay;
+    sc_signal<sc_uint<8>> preDelay;
+    sc_signal<sc_uint<8>> TC0_7, TCB2_7;
+    sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig;
     sc_signal<bool> nTCB1;
     sc_signal<bool> nSyncClear;
     sc_signal<bool> DAC;
@@ -39,7 +43,9 @@ SC_MODULE(SYSTEM)
     sc_signal<bool> nET;
     sc_signal<bool> MSBE;
     sc_signal<bool> LSBE;
-    sc_signal<sc_uint<4>> program;
+    sc_signal<bool> TCB7, nTCB7;
+    sc_signal<bool> SNMODEN, MODDIS;
+    sc_signal<bool> carry, MCCK;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -51,7 +57,7 @@ SC_MODULE(SYSTEM)
         tb0->outp0(TC0_7);
         tb0->outp1(rom0_outp_sig);
         tb0->outp2(rom1_outp_sig);
-        tb0->outp3(nTCB1);
+        tb0->outp3(MCCK);
         tb0->outp4(TCB2_7);
 
         tim0 = new timer0("tim0");
@@ -93,6 +99,21 @@ SC_MODULE(SYSTEM)
         count0->clk(nTCB1);
         count0->clr(nSyncClear);
         count0->outp0(TCB2_7);
+        count0->outp1(TCB7);
+
+        modRateCount0 = new modRateCount("modRateCount0");
+        modRateCount0->inp0(ratlvl);
+        modRateCount0->inp1(program);
+        modRateCount0->clk(TCB7);
+        modRateCount0->outp0(SNMODEN);
+        modRateCount0->outp1(MODDIS);
+        modRateCount0->outp2(carry);
+        modRateCount0->outp3(nTCB7);
+
+        modCountClk0 = new modCountClk("modCountClk0");
+        modCountClk0->clk(nTCB7);
+        modCountClk0->inp0(carry);
+        modCountClk0->outp0(MCCK);
     }
     ~SYSTEM() // destructor
     {
@@ -103,6 +124,7 @@ SC_MODULE(SYSTEM)
         delete split0;
         delete split1;
         delete timingProms0;
+        delete modRateCount0;
     }
 };
 
