@@ -9,6 +9,7 @@
 #include "modCount.h"
 #include "bitInvert.h"
 #include "delayDataReg.h"
+#include "writeAddrCount.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -24,6 +25,7 @@ SC_MODULE(SYSTEM)
     modCount *modCount0;
     bitInvert *bitInvert0;
     delayDataReg *delayDataReg0;
+    writeAddrCount *writeAddrCount0;
 
     // declare signals
     sc_clock clk_sig;
@@ -54,6 +56,7 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<16>> MC0_12;
     sc_signal<sc_uint<8>> MC5_12;
     sc_signal<sc_uint<8>> debug0;
+    sc_signal<sc_uint<8>> nROW, nCOLUMN;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -68,8 +71,8 @@ SC_MODULE(SYSTEM)
         tb0->rst(rst_sig);
         tb0->outp0(TC0_7);
         tb0->outp1(delayData);
-        tb0->outp2(MC0_12);
-        tb0->outp3(MCCK);
+        tb0->outp2(nROW);
+        tb0->outp3(nCOLUMN);
         tb0->outp4(nTCB7);
 
         tim0 = new timer0("tim0");
@@ -117,6 +120,11 @@ SC_MODULE(SYSTEM)
         bitInvert0->inp0(TCB7);
         bitInvert0->outp0(nTCB7);
 
+        writeAddrCount0 = new writeAddrCount("writeAddrCount0");
+        writeAddrCount0->inp0(nTCB7);
+        writeAddrCount0->outp0(nROW);
+        writeAddrCount0->outp1(nCOLUMN);
+
         modRateCount0 = new modRateCount("modRateCount0");
         modRateCount0->inp0(ratlvl);
         modRateCount0->inp1(program);
@@ -160,6 +168,7 @@ SC_MODULE(SYSTEM)
         delete modCount0;
         delete bitInvert0;
         delete delayDataReg0;
+        delete writeAddrCount0;
     }
 };
 

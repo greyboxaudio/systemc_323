@@ -8,8 +8,8 @@ SC_MODULE(tb)
     sc_in<bool> inp_rdy;*/
     sc_in<sc_uint<8>> outp0; // inp & outp are the opposite of fir
     sc_in<sc_uint<8>> outp1;
-    sc_in<sc_uint<16>> outp2;
-    sc_in<bool> outp3;
+    sc_in<sc_uint<8>> outp2;
+    sc_in<sc_uint<8>> outp3;
     sc_in<bool> outp4;
     // separate source & sink threads
     //void source();
