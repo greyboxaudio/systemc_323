@@ -10,6 +10,7 @@
 #include "bitInvert.h"
 #include "delayProms.h"
 #include "writeAddrCount.h"
+#include "byteReg.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -26,6 +27,7 @@ SC_MODULE(SYSTEM)
     bitInvert *bitInvert0;
     delayProms *delayProms0;
     writeAddrCount *writeAddrCount0;
+    byteReg *byteReg0;
 
     // declare signals
     sc_clock clk_sig;
@@ -56,7 +58,7 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<16>> MC0_12;
     sc_signal<sc_uint<8>> MC5_12;
     sc_signal<sc_uint<8>> nROW, nCOLUMN;
-    sc_signal<sc_uint<8>> delayData;
+    sc_signal<sc_uint<8>> delayData0, delayData1;
     sc_signal<sc_uint<8>> debug0, debug1, debug2, debug3, debug4;
     
     SC_CTOR(SYSTEM)
@@ -71,8 +73,8 @@ SC_MODULE(SYSTEM)
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
         tb0->rst(rst_sig);
         tb0->outp0(TC0_7);
-        tb0->outp1(delayData);
-        tb0->outp2(debug1);
+        tb0->outp1(delayData1);
+        tb0->outp2(delayData0);
         tb0->outp3(debug2);
         tb0->outp4(debug3);
         tb0->outp5(debug4);
@@ -147,6 +149,11 @@ SC_MODULE(SYSTEM)
         modCount0->outp0(MC0_12);
         modCount0->outp1(MC5_12);
 
+        byteReg0 = new byteReg("byteReg0");
+        byteReg0->clk(nTCB1);
+        byteReg0->inp0(delayData0);
+        byteReg0->outp0(delayData1);
+
         delayProms0 = new delayProms("delayProms0");
         delayProms0->nMOD(nMOD);
         delayProms0->MODDIS(MODDIS);
@@ -154,7 +161,7 @@ SC_MODULE(SYSTEM)
         delayProms0->MC5_12(MC5_12);
         delayProms0->preDelay(preDelay);
         delayProms0->program(program);
-        delayProms0->outp0(delayData);
+        delayProms0->outp0(delayData0);
 
     }
     ~SYSTEM() // destructor
@@ -172,6 +179,7 @@ SC_MODULE(SYSTEM)
         delete bitInvert0;
         delete delayProms0;
         delete writeAddrCount0;
+        delete byteReg0;
     }
 };
 
