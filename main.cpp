@@ -79,7 +79,7 @@ SC_MODULE(SYSTEM)
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData;
-    sc_signal<bool> nGainModPromEnable;
+    sc_signal<bool> nGainModPromEnable, nGSN;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -210,6 +210,7 @@ SC_MODULE(SYSTEM)
         gainProm0->address1(decay);
         gainProm0->address2(program);
         gainProm0->outp0(gainData);
+        gainProm0->outp1(nGSN);
 
         byteReg0 = new byteReg("byteReg0");
         byteReg0->clk(nTCB1);

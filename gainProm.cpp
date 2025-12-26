@@ -10,4 +10,5 @@ void gainProm::gainProm_main(void)
         promData = d0806[promAddress];
     }
     outp0.write(promData);
+    outp1.write(promData[7]);
 }

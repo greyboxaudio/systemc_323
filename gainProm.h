@@ -7,6 +7,7 @@ SC_MODULE(gainProm)
     sc_in<sc_uint<8>> address1;
     sc_in<sc_uint<8>> address2;
     sc_out<sc_uint<8>> outp0;
+    sc_out<bool> outp1;
 
     void gainProm_main();
 
