@@ -19,6 +19,7 @@
 #include "gainProm.h"
 #include "bitNAND.h"
 #include "comparator.h"
+#include "latchedMux.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -51,6 +52,7 @@ SC_MODULE(SYSTEM)
     bitNAND *bitNAND2;
     bitNAND *bitNAND3;
     comparator *comparator0;
+    latchedMux *latchedMux0;
 
     // declare signals
     sc_clock clk_sig;
@@ -86,7 +88,7 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> debug0, debug1, debug2, debug3, debug4;
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
-    sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData;
+    sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData, gain;
     sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, bitFlipFlop2outp, nSelectA, compOutp0;
     
     SC_CTOR(SYSTEM)
@@ -107,9 +109,9 @@ SC_MODULE(SYSTEM)
         tb0->outp2(delayData1);
         tb0->outp3(gainModCtrlData);
         tb0->outp4(gainModData);
-        tb0->outp5(gainData);
-        tb0->outp6(nDAC);
-        tb0->outp7(nGainModPromEnable);
+        tb0->outp5(gain);
+        tb0->outp6(nGainLatch);
+        tb0->outp7(nSelectA);
 
         tim0 = new timer0("tim0");
         tim0->clk(clk_sig);
@@ -251,6 +253,13 @@ SC_MODULE(SYSTEM)
         bitNAND1->inp1(bitFlipFlop2outp);
         bitNAND1->outp0(nGainLatch);
 
+        latchedMux0 = new latchedMux("latchedMux0");
+        latchedMux0->clk(nGainLatch);
+        latchedMux0->sel(nSelectA);
+        latchedMux0->inp0(gainModData);
+        latchedMux0->inp1(gainData);
+        latchedMux0->outp0(gain);
+
         byteReg0 = new byteReg("byteReg0");
         byteReg0->clk(nTCB1);
         byteReg0->inp0(delayData0);
@@ -313,6 +322,7 @@ SC_MODULE(SYSTEM)
         delete bitNAND2;
         delete bitNAND3;
         delete comparator0;
+        delete latchedMux0;
     }
 };
 
