@@ -12,6 +12,10 @@ SC_MODULE(delayDataReg)
     sc_in<sc_uint<8>> inp8; //nCOL
     sc_in<bool> inp9; //RAS
     sc_out<sc_uint<8>> outp0; //ADDRESS
+    sc_out<sc_uint<8>> outp1;
+    sc_out<sc_uint<8>> outp2;
+    sc_out<sc_uint<8>> outp3;
+    sc_out<sc_uint<8>> outp4;
 
     void delayDataReg_main();
 

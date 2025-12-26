@@ -11,7 +11,7 @@ bool c4;
 
 void delayDataReg::delayDataReg_main(void)
 {
-    outp0.write(address[6] + ((address & 63) << 1) + (address& 128));
+    //outp0.write(address[6] + ((address & 63) << 1) + (address& 128));
 
     //row carry out latch
     if (inp9.read() == 1)
@@ -40,7 +40,6 @@ void delayDataReg::delayDataReg_main(void)
     {
         writeAddressData = ~inp8.read();
     }
-
     //delay data register
     sc_uint<16> modAddress = (inp3.read() >> 1) + ((inp4.read() << 5) & 4064);
     sc_uint<16> dlyAddress = inp3.read() + ((inp5.read() & 7) << 6) + ((inp6.read() & 7) << 9) + ((inp5.read() & 1) << 12) + ((inp6.read() & 1) << 13);
@@ -56,4 +55,9 @@ void delayDataReg::delayDataReg_main(void)
     {
         delayData = 0; // not 100% sure if this is equivalent circuit behaviour!
     }
+    outp0.write(dlyAddress);
+    outp1.write(d0808[dlyAddress]);
+    outp2.write(modAddress);
+    outp3.write(d0807[modAddress]);
+    outp4.write(delayData);
 }

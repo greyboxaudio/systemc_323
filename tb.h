@@ -6,11 +6,7 @@ SC_MODULE(tb)
     /*sc_out<sc_uint<8>> inp; // inp & outp are the opposite of fir
     sc_out<bool> inp_vld;
     sc_in<bool> inp_rdy;*/
-    sc_in<sc_uint<8>> outp0; // inp & outp are the opposite of fir
-    sc_in<sc_uint<8>> outp1;
-    sc_in<sc_uint<8>> outp2;
-    sc_in<sc_uint<8>> outp3;
-    sc_in<bool> outp4;
+    sc_in<sc_uint<8>> outp0, outp1, outp2, outp3, outp4, outp5; // inp & outp are the opposite of fir
     // separate source & sink threads
     //void source();
     void sink();

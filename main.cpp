@@ -55,8 +55,8 @@ SC_MODULE(SYSTEM)
     sc_signal<bool> carry, MCCK;
     sc_signal<sc_uint<16>> MC0_12;
     sc_signal<sc_uint<8>> MC5_12;
-    sc_signal<sc_uint<8>> debug0;
     sc_signal<sc_uint<8>> nROW, nCOLUMN;
+    sc_signal<sc_uint<8>> debug0, debug1, debug2, debug3, debug4;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -70,10 +70,11 @@ SC_MODULE(SYSTEM)
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
         tb0->rst(rst_sig);
         tb0->outp0(TC0_7);
-        tb0->outp1(delayData);
-        tb0->outp2(nROW);
-        tb0->outp3(nCOLUMN);
-        tb0->outp4(nTCB7);
+        tb0->outp1(debug0);
+        tb0->outp2(debug1);
+        tb0->outp3(debug2);
+        tb0->outp4(debug3);
+        tb0->outp5(debug4);
 
         tim0 = new timer0("tim0");
         tim0->clk(clk_sig);
@@ -132,7 +133,6 @@ SC_MODULE(SYSTEM)
         modRateCount0->outp0(SNMODEN);
         modRateCount0->outp1(MODDIS);
         modRateCount0->outp2(carry);
-        modRateCount0->debug(debug0);
 
         modCountClk0 = new modCountClk("modCountClk0");
         modCountClk0->clk(nTCB7);
@@ -155,7 +155,11 @@ SC_MODULE(SYSTEM)
         delayDataReg0->inp7(nROW);
         delayDataReg0->inp8(nCOLUMN);
         delayDataReg0->inp9(RAS);
-        delayDataReg0->outp0(delayData);
+        delayDataReg0->outp0(debug0);
+        delayDataReg0->outp1(debug1);
+        delayDataReg0->outp2(debug2);
+        delayDataReg0->outp3(debug3);
+        delayDataReg0->outp4(debug4);
     }
     ~SYSTEM() // destructor
     {
