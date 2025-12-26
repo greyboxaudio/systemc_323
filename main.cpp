@@ -15,6 +15,7 @@
 #include "byteFullAdder.h"
 #include "addressMangle.h"
 #include "gainModCtrlProm.h"
+#include "gainModProm.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -39,6 +40,7 @@ SC_MODULE(SYSTEM)
     byteFullAdder *byteFullAdder0;
     addressMangle *addressMangle0;
     gainModCtrlProm *gainModCtrlProm0;
+    gainModProm *gainModProm0;
 
     // declare signals
     sc_clock clk_sig;
@@ -74,7 +76,7 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> debug0, debug1, debug2, debug3, debug4;
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
-    sc_signal<sc_uint<8>> gainModCtrlData;
+    sc_signal<sc_uint<8>> gainModCtrlData, gainModData;
     sc_signal<bool> nGainModPromEnable;
     
     SC_CTOR(SYSTEM)
@@ -94,10 +96,10 @@ SC_MODULE(SYSTEM)
         tb0->outp1(MC5_12);
         tb0->outp2(delayData1);
         tb0->outp3(writeAddrData);
-        tb0->outp4(address1);
-        tb0->outp5(gainModCtrlData);
-        tb0->outp6(DAC);
-        tb0->outp7(nDAC);
+        tb0->outp4(gainModCtrlData);
+        tb0->outp5(gainModData);
+        tb0->outp6(nDAC);
+        tb0->outp7(nGainModPromEnable);
 
         tim0 = new timer0("tim0");
         tim0->clk(clk_sig);
@@ -192,6 +194,13 @@ SC_MODULE(SYSTEM)
         gainModCtrlProm0->outp0(gainModCtrlData);
         gainModCtrlProm0->outp1(nGainModPromEnable);
 
+        gainModProm0 = new gainModProm("gainModProm0");
+        gainModProm0->chipEnable(nGainModPromEnable);
+        gainModProm0->outpEnable(pullLow);
+        gainModProm0->address0(gainModCtrlData);
+        gainModProm0->address1(MC0_12);
+        gainModProm0->outp0(gainModData);
+
         byteReg0 = new byteReg("byteReg0");
         byteReg0->clk(nTCB1);
         byteReg0->inp0(delayData0);
@@ -247,6 +256,7 @@ SC_MODULE(SYSTEM)
         delete byteFullAdder0;
         delete addressMangle0;
         delete gainModCtrlProm0;
+        delete gainModProm0;
     }
 };
 

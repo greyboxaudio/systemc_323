@@ -1,2 +1,2 @@
-main: main.cpp tb.cpp timer0.cpp timingProms.cpp delayProms.cpp gainModCtrlProm.cpp
-	gcc -o main main.cpp tb.cpp timer0.cpp timingProms.cpp delayProms.cpp gainModCtrlProm.cpp -I . -I /opt/systemc/include -L /opt/systemc/lib -lsystemc -lstdc++ -lm
+main: main.cpp tb.cpp timer0.cpp timingProms.cpp delayProms.cpp gainModCtrlProm.cpp gainModProm.cpp
+	gcc -o main main.cpp tb.cpp timer0.cpp timingProms.cpp delayProms.cpp gainModCtrlProm.cpp gainModProm.cpp -I . -I /opt/systemc/include -L /opt/systemc/lib -lsystemc -lstdc++ -lm
