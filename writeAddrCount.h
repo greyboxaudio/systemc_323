@@ -1,7 +1,7 @@
 #include <systemc.h>
 SC_MODULE(writeAddrCount)
 {
-    sc_in<bool> inp0;
+    sc_in<bool> clk;
     sc_out<sc_uint<8>> outp0;
     sc_out<sc_uint<8>> outp1;
 
@@ -21,6 +21,6 @@ SC_MODULE(writeAddrCount)
     SC_CTOR(writeAddrCount)
     {
         SC_METHOD(writeAddrCount_main);
-        sensitive << inp0.neg();
+        sensitive << clk.neg();
     }
 };

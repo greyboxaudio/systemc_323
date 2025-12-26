@@ -4,6 +4,7 @@ SC_MODULE(dacSlotAddrCount)
     sc_in<bool> clk, clr;
     sc_out<sc_uint<8>> outp0;
     sc_out<bool> outp1;
+    sc_out<bool> outp2;
 
     sc_uint<8> counterValue{};
 
@@ -16,6 +17,7 @@ SC_MODULE(dacSlotAddrCount)
         }
         outp0.write(counterValue);
         outp1.write(counterValue[5]);
+        outp2.write(counterValue[0]);
     }
 
     SC_CTOR(dacSlotAddrCount)

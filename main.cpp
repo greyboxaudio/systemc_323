@@ -11,6 +11,7 @@
 #include "delayProms.h"
 #include "writeAddrCount.h"
 #include "byteReg.h"
+#include "byteInvertMux.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -25,9 +26,11 @@ SC_MODULE(SYSTEM)
     modCountClk *modCountClk0;
     modCount *modCount0;
     bitInvert *bitInvert0;
+    bitInvert *bitInvert1;
     delayProms *delayProms0;
     writeAddrCount *writeAddrCount0;
     byteReg *byteReg0;
+    byteInvertMux *byteInvertMux0;
 
     // declare signals
     sc_clock clk_sig;
@@ -52,12 +55,12 @@ SC_MODULE(SYSTEM)
     sc_signal<bool> nET;
     sc_signal<bool> MSBE;
     sc_signal<bool> LSBE;
-    sc_signal<bool> TCB7, nTCB7;
+    sc_signal<bool> TCB2, TCB7, nTCB7, TCB7A;
     sc_signal<bool> SNMODEN, MODDIS;
     sc_signal<bool> carry, MCCK;
     sc_signal<sc_uint<16>> MC0_12;
     sc_signal<sc_uint<8>> MC5_12;
-    sc_signal<sc_uint<8>> nROW, nCOLUMN;
+    sc_signal<sc_uint<8>> nROW, nCOLUMN, writeAddrData;
     sc_signal<sc_uint<8>> delayData0, delayData1;
     sc_signal<sc_uint<8>> debug0, debug1, debug2, debug3, debug4;
     
@@ -75,11 +78,11 @@ SC_MODULE(SYSTEM)
         tb0->outp0(TC0_7);
         tb0->outp1(delayData1);
         tb0->outp2(delayData0);
-        tb0->outp3(debug2);
-        tb0->outp4(debug3);
-        tb0->outp5(debug4);
-        tb0->outp6(nMOD);
-        tb0->outp7(MODDIS);
+        tb0->outp3(nROW);
+        tb0->outp4(nCOLUMN);
+        tb0->outp5(writeAddrData);
+        tb0->outp6(TCB7);
+        tb0->outp7(TCB7A);
 
         tim0 = new timer0("tim0");
         tim0->clk(clk_sig);
@@ -121,15 +124,26 @@ SC_MODULE(SYSTEM)
         count0->clr(nSyncClear);
         count0->outp0(TCB2_7);
         count0->outp1(TCB7);
+        count0->outp2(TCB2);
+
+        writeAddrCount0 = new writeAddrCount("writeAddrCount0");
+        writeAddrCount0->clk(TCB7A);
+        writeAddrCount0->outp0(nROW);
+        writeAddrCount0->outp1(nCOLUMN);
+
+        byteInvertMux0 = new byteInvertMux("byteInvertMux0");
+        byteInvertMux0->sel(TCB2);
+        byteInvertMux0->inp0(nROW);
+        byteInvertMux0->inp1(nCOLUMN);
+        byteInvertMux0->outp0(writeAddrData);
 
         bitInvert0 = new bitInvert("bitInvert0");
         bitInvert0->inp0(TCB7);
         bitInvert0->outp0(nTCB7);
 
-        writeAddrCount0 = new writeAddrCount("writeAddrCount0");
-        writeAddrCount0->inp0(nTCB7);
-        writeAddrCount0->outp0(nROW);
-        writeAddrCount0->outp1(nCOLUMN);
+        bitInvert1 = new bitInvert("bitInvert1");
+        bitInvert1->inp0(nTCB7);
+        bitInvert1->outp0(TCB7A);
 
         modRateCount0 = new modRateCount("modRateCount0");
         modRateCount0->inp0(ratlvl);
@@ -180,6 +194,7 @@ SC_MODULE(SYSTEM)
         delete delayProms0;
         delete writeAddrCount0;
         delete byteReg0;
+        delete byteInvertMux0;
     }
 };
 

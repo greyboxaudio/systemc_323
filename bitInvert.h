@@ -4,10 +4,11 @@ SC_MODULE(bitInvert)
     sc_in<bool> inp0;
     sc_out<bool> outp0;
 
+    bool value{};
     void bitInvert_main()
     {
-        bool value = inp0.read();
         outp0.write(!value);
+        value = inp0.read();
     }
 
     SC_CTOR(bitInvert)
