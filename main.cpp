@@ -18,6 +18,7 @@
 #include "gainModProm.h"
 #include "gainProm.h"
 #include "bitNAND.h"
+#include "comparator.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -49,6 +50,7 @@ SC_MODULE(SYSTEM)
     bitNAND *bitNAND1;
     bitNAND *bitNAND2;
     bitNAND *bitNAND3;
+    comparator *comparator0;
 
     // declare signals
     sc_clock clk_sig;
@@ -223,6 +225,16 @@ SC_MODULE(SYSTEM)
         gainProm0->outp0(gainData);
         gainProm0->outp1(nGSN);
 
+        comparator0 = new comparator("comparator0");
+        comparator0->inp0(gainModData);
+        comparator0->inp1(gainData);
+        comparator0->outp0(compOutp0);
+
+        bitNAND3 = new bitNAND("bitNAND3");
+        bitNAND3->inp0(gainModPromEnabled);
+        bitNAND3->inp1(compOutp0);
+        bitNAND3->outp0(nSelectA);
+
         bitNAND0 = new bitNAND("bitNAND0");
         bitNAND0->inp0(nTCB1);
         bitNAND0->inp1(nTCB1);
@@ -300,6 +312,7 @@ SC_MODULE(SYSTEM)
         delete bitNAND1;
         delete bitNAND2;
         delete bitNAND3;
+        delete comparator0;
     }
 };
 
