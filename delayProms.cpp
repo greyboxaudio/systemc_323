@@ -13,18 +13,14 @@ void delayProms::delayProms_main(void)
     {
         delayData = d0808[dlyAddress];
     }
-    else
+    else if (nMOD.read() == 0 && MODDIS.read() == 0)
     {
         delayData = d0807[modAddress];
-    } /*
-     else if (nMOD.read() == 0 && MODDIS.read() == 0)
-     {
-         delayData = d0807[modAddress];
-     }
-     else
-     {
-         delayData = 0; // not 100% sure if this is equivalent circuit behaviour!
-     }*/
+    }
+    else
+    {
+        delayData = 0; // not 100% sure if this is equivalent circuit behaviour!
+    }
     outp0.write(delayData);
     modAddress = (TCB2_7.read() >> 1) + ((MC5_12.read() << 5) & 4064);
     dlyAddress = TCB2_7.read() + ((preDelay.read() & 7) << 6) + ((program.read() & 7) << 9) + ((preDelay.read() & 1) << 12) + ((program.read() & 1) << 13);

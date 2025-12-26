@@ -182,7 +182,7 @@ SC_MODULE(SYSTEM)
 
         delayProms0 = new delayProms("delayProms0");
         delayProms0->nMOD(nMOD);
-        delayProms0->MODDIS(MODDIS);
+        delayProms0->MODDIS(pullLow);
         delayProms0->TCB2_7(TCB2_7);
         delayProms0->MC5_12(MC5_12);
         delayProms0->preDelay(preDelay);
