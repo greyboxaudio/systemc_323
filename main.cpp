@@ -181,12 +181,12 @@ SC_MODULE(SYSTEM)
         byteReg0->outp0(delayData1);
 
         delayProms0 = new delayProms("delayProms0");
-        delayProms0->nMOD(nMOD);
-        delayProms0->MODDIS(pullLow);
-        delayProms0->TCB2_7(TCB2_7);
-        delayProms0->MC5_12(MC5_12);
-        delayProms0->preDelay(preDelay);
-        delayProms0->program(program);
+        delayProms0->chipEnable(nMOD);
+        delayProms0->outpEnable(pullLow);
+        delayProms0->address0(TCB2_7);
+        delayProms0->address1(MC5_12);
+        delayProms0->address2(preDelay);
+        delayProms0->address3(program);
         delayProms0->outp0(delayData0);
 
         //rowCarryOutLatch

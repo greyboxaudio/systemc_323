@@ -9,11 +9,11 @@ sc_uint<8> delayData;
 void delayProms::delayProms_main(void)
 {
     // delay data register
-    if (nMOD.read() == 1)
+    if (chipEnable.read() == 1)
     {
         delayData = d0808[dlyAddress];
     }
-    else if (nMOD.read() == 0 && MODDIS.read() == 0)
+    else if (chipEnable.read() == 0 && outpEnable.read() == 0)
     {
         delayData = d0807[modAddress];
     }
@@ -22,6 +22,6 @@ void delayProms::delayProms_main(void)
         delayData = 0; // not 100% sure if this is equivalent circuit behaviour!
     }
     outp0.write(delayData);
-    modAddress = (TCB2_7.read() >> 1) + ((MC5_12.read() << 5) & 4064);
-    dlyAddress = TCB2_7.read() + ((preDelay.read() & 7) << 6) + ((program.read() & 7) << 9) + ((preDelay.read() & 1) << 12) + ((program.read() & 1) << 13);
+    modAddress = (address0.read() >> 1) + ((address1.read() << 5) & 4064);
+    dlyAddress = address0.read() + ((address2.read() & 7) << 6) + ((address3.read() & 7) << 9) + ((address2.read() & 1) << 12) + ((address3.read() & 1) << 13);
 }
