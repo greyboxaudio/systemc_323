@@ -8,7 +8,7 @@
 #include "modCountClk.h"
 #include "modCount.h"
 #include "bitInvert.h"
-#include "delayData.h"
+#include "delayProms.h"
 #include "writeAddrCount.h"
 
 SC_MODULE(SYSTEM)
@@ -24,7 +24,7 @@ SC_MODULE(SYSTEM)
     modCountClk *modCountClk0;
     modCount *modCount0;
     bitInvert *bitInvert0;
-    delayData *delayData0;
+    delayProms *delayProms0;
     writeAddrCount *writeAddrCount0;
 
     // declare signals
@@ -56,6 +56,7 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<16>> MC0_12;
     sc_signal<sc_uint<8>> MC5_12;
     sc_signal<sc_uint<8>> nROW, nCOLUMN;
+    sc_signal<sc_uint<8>> delayData;
     sc_signal<sc_uint<8>> debug0, debug1, debug2, debug3, debug4;
     
     SC_CTOR(SYSTEM)
@@ -70,7 +71,7 @@ SC_MODULE(SYSTEM)
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
         tb0->rst(rst_sig);
         tb0->outp0(TC0_7);
-        tb0->outp1(debug0);
+        tb0->outp1(delayData);
         tb0->outp2(debug1);
         tb0->outp3(debug2);
         tb0->outp4(debug3);
@@ -146,18 +147,15 @@ SC_MODULE(SYSTEM)
         modCount0->outp0(MC0_12);
         modCount0->outp1(MC5_12);
 
-        delayData0 = new delayData("delayData0");
-        delayData0->nMOD(nMOD);
-        delayData0->MODDIS(MODDIS);
-        delayData0->TCB2_7(TCB2_7);
-        delayData0->MC5_12(MC5_12);
-        delayData0->preDelay(preDelay);
-        delayData0->program(program);
-        delayData0->outp0(debug0);
-        delayData0->outp1(debug1);
-        delayData0->outp2(debug2);
-        delayData0->outp3(debug3);
-        delayData0->outp4(debug4);
+        delayProms0 = new delayProms("delayProms0");
+        delayProms0->nMOD(nMOD);
+        delayProms0->MODDIS(MODDIS);
+        delayProms0->TCB2_7(TCB2_7);
+        delayProms0->MC5_12(MC5_12);
+        delayProms0->preDelay(preDelay);
+        delayProms0->program(program);
+        delayProms0->outp0(delayData);
+
     }
     ~SYSTEM() // destructor
     {
@@ -172,7 +170,7 @@ SC_MODULE(SYSTEM)
         delete modCountClk0;
         delete modCount0;
         delete bitInvert0;
-        delete delayData0;
+        delete delayProms0;
         delete writeAddrCount0;
     }
 };
