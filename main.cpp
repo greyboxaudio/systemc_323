@@ -8,7 +8,7 @@
 #include "modCountClk.h"
 #include "modCount.h"
 #include "bitInvert.h"
-#include "delayDataReg.h"
+#include "delayData.h"
 #include "writeAddrCount.h"
 
 SC_MODULE(SYSTEM)
@@ -24,7 +24,7 @@ SC_MODULE(SYSTEM)
     modCountClk *modCountClk0;
     modCount *modCount0;
     bitInvert *bitInvert0;
-    delayDataReg *delayDataReg0;
+    delayData *delayData0;
     writeAddrCount *writeAddrCount0;
 
     // declare signals
@@ -32,7 +32,7 @@ SC_MODULE(SYSTEM)
     sc_signal<bool> rst_sig;
     sc_signal<sc_uint<4>> program, ratlvl, decay, preDelay;
     sc_signal<sc_uint<8>> TC0_7, TCB2_7;
-    sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig, delayData;
+    sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig;
     sc_signal<bool> nTCB1;
     sc_signal<bool> nSyncClear;
     sc_signal<bool> DAC;
@@ -75,6 +75,8 @@ SC_MODULE(SYSTEM)
         tb0->outp3(debug2);
         tb0->outp4(debug3);
         tb0->outp5(debug4);
+        tb0->outp6(nMOD);
+        tb0->outp7(MODDIS);
 
         tim0 = new timer0("tim0");
         tim0->clk(clk_sig);
@@ -144,22 +146,18 @@ SC_MODULE(SYSTEM)
         modCount0->outp0(MC0_12);
         modCount0->outp1(MC5_12);
 
-        delayDataReg0 = new delayDataReg("delayDataReg0");
-        delayDataReg0->inp0(nTCB1);
-        delayDataReg0->inp1(nMOD);
-        delayDataReg0->inp2(MODDIS);
-        delayDataReg0->inp3(TCB2_7);
-        delayDataReg0->inp4(MC5_12);
-        delayDataReg0->inp5(preDelay);
-        delayDataReg0->inp6(program);
-        delayDataReg0->inp7(nROW);
-        delayDataReg0->inp8(nCOLUMN);
-        delayDataReg0->inp9(RAS);
-        delayDataReg0->outp0(debug0);
-        delayDataReg0->outp1(debug1);
-        delayDataReg0->outp2(debug2);
-        delayDataReg0->outp3(debug3);
-        delayDataReg0->outp4(debug4);
+        delayData0 = new delayData("delayData0");
+        delayData0->nMOD(nMOD);
+        delayData0->MODDIS(MODDIS);
+        delayData0->TCB2_7(TCB2_7);
+        delayData0->MC5_12(MC5_12);
+        delayData0->preDelay(preDelay);
+        delayData0->program(program);
+        delayData0->outp0(debug0);
+        delayData0->outp1(debug1);
+        delayData0->outp2(debug2);
+        delayData0->outp3(debug3);
+        delayData0->outp4(debug4);
     }
     ~SYSTEM() // destructor
     {
@@ -174,7 +172,7 @@ SC_MODULE(SYSTEM)
         delete modCountClk0;
         delete modCount0;
         delete bitInvert0;
-        delete delayDataReg0;
+        delete delayData0;
         delete writeAddrCount0;
     }
 };
