@@ -14,6 +14,7 @@
 #include "byteInvertMux.h"
 #include "byteFullAdder.h"
 #include "addressMangle.h"
+#include "gainModCtrlProm.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -30,12 +31,14 @@ SC_MODULE(SYSTEM)
     modCount *modCount0;
     bitInvert *bitInvert0;
     bitInvert *bitInvert1;
+    bitInvert *bitInvert2;
     delayProms *delayProms0;
     writeAddrCount *writeAddrCount0;
     byteReg *byteReg0;
     byteInvertMux *byteInvertMux0;
     byteFullAdder *byteFullAdder0;
     addressMangle *addressMangle0;
+    gainModCtrlProm *gainModCtrlProm0;
 
     // declare signals
     sc_clock clk_sig;
@@ -45,7 +48,7 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig;
     sc_signal<bool> nTCB1;
     sc_signal<bool> nSyncClear;
-    sc_signal<bool> DAC;
+    sc_signal<bool> DAC, nDAC;
     sc_signal<bool> DACEN;
     sc_signal<bool> CAS;
     sc_signal<bool> RAS;
@@ -71,6 +74,8 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> debug0, debug1, debug2, debug3, debug4;
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
+    sc_signal<sc_uint<8>> gainModCtrlData;
+    sc_signal<bool> nGainModPromEnable;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -89,10 +94,10 @@ SC_MODULE(SYSTEM)
         tb0->outp1(MC5_12);
         tb0->outp2(delayData1);
         tb0->outp3(writeAddrData);
-        tb0->outp4(address0);
-        tb0->outp5(address1);
-        tb0->outp6(c0);
-        tb0->outp7(c4);
+        tb0->outp4(address1);
+        tb0->outp5(gainModCtrlData);
+        tb0->outp6(DAC);
+        tb0->outp7(nDAC);
 
         tim0 = new timer0("tim0");
         tim0->clk(clk_sig);
@@ -128,6 +133,10 @@ SC_MODULE(SYSTEM)
         split1->outp5(nET);
         split1->outp6(MSBE);
         split1->outp7(LSBE);
+
+        bitInvert2 = new bitInvert("bitInvert2");
+        bitInvert2->inp0(DAC);
+        bitInvert2->outp0(nDAC);
 
         count0 = new dacSlotAddrCount("count0");
         count0->clk(nTCB1);
@@ -175,6 +184,14 @@ SC_MODULE(SYSTEM)
         modCount0->outp0(MC0_12);
         modCount0->outp1(MC5_12);
 
+        gainModCtrlProm0 = new gainModCtrlProm("gainModCtrlProm0");
+        gainModCtrlProm0->chipEnable(nDAC);
+        gainModCtrlProm0->outpEnable(pullLow);
+        gainModCtrlProm0->address0(TCB2_7);
+        gainModCtrlProm0->address1(MC5_12);
+        gainModCtrlProm0->outp0(gainModCtrlData);
+        gainModCtrlProm0->outp1(nGainModPromEnable);
+
         byteReg0 = new byteReg("byteReg0");
         byteReg0->clk(nTCB1);
         byteReg0->inp0(delayData0);
@@ -221,12 +238,15 @@ SC_MODULE(SYSTEM)
         delete bitFlipFlop1;
         delete modCount0;
         delete bitInvert0;
+        delete bitInvert1;
+        delete bitInvert2;
         delete delayProms0;
         delete writeAddrCount0;
         delete byteReg0;
         delete byteInvertMux0;
         delete byteFullAdder0;
         delete addressMangle0;
+        delete gainModCtrlProm0;
     }
 };
 

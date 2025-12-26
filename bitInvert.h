@@ -7,8 +7,7 @@ SC_MODULE(bitInvert)
     bool value{};
     void bitInvert_main()
     {
-        outp0.write(!value);
-        value = inp0.read();
+        outp0.write(!inp0.read());
     }
 
     SC_CTOR(bitInvert)
