@@ -4,6 +4,7 @@
 #include "dacSlotAddrCount.h"
 #include "timingProms.h"
 #include "byteSplitter.h"
+#include "modRateCountProm.h"
 #include "modRateCount.h"
 #include "bitFlipFlop.h"
 #include "modCount.h"
@@ -30,6 +31,7 @@ SC_MODULE(SYSTEM)
     byteSplitter *split0;
     byteSplitter *split1;
     dacSlotAddrCount *count0;
+    modRateCountProm *modRateCountProm0;
     modRateCount *modRateCount0;
     bitFlipFlop *bitFlipFlop0;
     bitFlipFlop *bitFlipFlop1;
@@ -59,7 +61,7 @@ SC_MODULE(SYSTEM)
     sc_signal<bool> rst_sig;
     sc_signal<sc_uint<8>> program, ratlvl, decay, preDelay;
     sc_signal<sc_uint<8>> TC0_7, TCB2_7;
-    sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig;
+    sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig, modRateCountData;
     sc_signal<bool> nTCB1, TCB1;
     sc_signal<bool> nSyncClear;
     sc_signal<bool> DAC, nDAC;
@@ -178,13 +180,17 @@ SC_MODULE(SYSTEM)
         bitInvert1->inp0(nTCB7);
         bitInvert1->outp0(TCB7A);
 
+        modRateCountProm0 = new modRateCountProm("modRateCountProm0");
+        modRateCountProm0->address0(ratlvl);
+        modRateCountProm0->address1(program);
+        modRateCountProm0->outp0(modRateCountData);
+        modRateCountProm0->outp1(SNMODEN);
+        modRateCountProm0->outp2(MODDIS);
+
         modRateCount0 = new modRateCount("modRateCount0");
-        modRateCount0->inp0(ratlvl);
-        modRateCount0->inp1(program);
         modRateCount0->clk(TCB7);
-        modRateCount0->outp0(SNMODEN);
-        modRateCount0->outp1(MODDIS);
-        modRateCount0->outp2(carry);
+        modRateCount0->inp0(modRateCountData);
+        modRateCount0->outp0(carry);
 
         //modCountClk
         bitFlipFlop0 = new bitFlipFlop("bitFlipFlop0");
@@ -301,6 +307,7 @@ SC_MODULE(SYSTEM)
         delete split0;
         delete split1;
         delete timingProms0;
+        delete modRateCountProm0;
         delete modRateCount0;
         delete bitFlipFlop0;
         delete bitFlipFlop1;
