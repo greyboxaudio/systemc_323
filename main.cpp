@@ -16,6 +16,7 @@
 #include "addressMangle.h"
 #include "gainModCtrlProm.h"
 #include "gainModProm.h"
+#include "gainProm.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -41,11 +42,12 @@ SC_MODULE(SYSTEM)
     addressMangle *addressMangle0;
     gainModCtrlProm *gainModCtrlProm0;
     gainModProm *gainModProm0;
+    gainProm *gainProm0;
 
     // declare signals
     sc_clock clk_sig;
     sc_signal<bool> rst_sig;
-    sc_signal<sc_uint<4>> program, ratlvl, decay, preDelay;
+    sc_signal<sc_uint<8>> program, ratlvl, decay, preDelay;
     sc_signal<sc_uint<8>> TC0_7, TCB2_7;
     sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig;
     sc_signal<bool> nTCB1;
@@ -76,7 +78,7 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> debug0, debug1, debug2, debug3, debug4;
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
-    sc_signal<sc_uint<8>> gainModCtrlData, gainModData;
+    sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData;
     sc_signal<bool> nGainModPromEnable;
     
     SC_CTOR(SYSTEM)
@@ -95,9 +97,9 @@ SC_MODULE(SYSTEM)
         tb0->outp0(TC0_7);
         tb0->outp1(MC5_12);
         tb0->outp2(delayData1);
-        tb0->outp3(writeAddrData);
-        tb0->outp4(gainModCtrlData);
-        tb0->outp5(gainModData);
+        tb0->outp3(gainModCtrlData);
+        tb0->outp4(gainModData);
+        tb0->outp5(gainData);
         tb0->outp6(nDAC);
         tb0->outp7(nGainModPromEnable);
 
@@ -201,6 +203,14 @@ SC_MODULE(SYSTEM)
         gainModProm0->address1(MC0_12);
         gainModProm0->outp0(gainModData);
 
+        gainProm0 = new gainProm("gainProm0");
+        gainProm0->chipEnable(nDACX);
+        gainProm0->outpEnable(nDACX);
+        gainProm0->address0(TCB2_7);
+        gainProm0->address1(decay);
+        gainProm0->address2(program);
+        gainProm0->outp0(gainData);
+
         byteReg0 = new byteReg("byteReg0");
         byteReg0->clk(nTCB1);
         byteReg0->inp0(delayData0);
@@ -257,6 +267,7 @@ SC_MODULE(SYSTEM)
         delete addressMangle0;
         delete gainModCtrlProm0;
         delete gainModProm0;
+        delete gainProm0;
     }
 };
 

@@ -5,8 +5,8 @@ SC_MODULE(delayProms)
     sc_in<bool> outpEnable; //MODDIS
     sc_in<sc_uint<8>> address0; //TCB2_7
     sc_in<sc_uint<8>> address1; //MC5_12
-    sc_in<sc_uint<4>> address2; //preDelay
-    sc_in<sc_uint<4>> address3; //program
+    sc_in<sc_uint<8>> address2; //preDelay
+    sc_in<sc_uint<8>> address3; //program
     sc_out<sc_uint<8>> outp0; //delayData
 
     void delayProms_main();
