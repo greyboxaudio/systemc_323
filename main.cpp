@@ -13,6 +13,7 @@
 #include "byteReg.h"
 #include "byteInvertMux.h"
 #include "byteFullAdder.h"
+#include "addressMangle.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -34,6 +35,7 @@ SC_MODULE(SYSTEM)
     byteReg *byteReg0;
     byteInvertMux *byteInvertMux0;
     byteFullAdder *byteFullAdder0;
+    addressMangle *addressMangle0;
 
     // declare signals
     sc_clock clk_sig;
@@ -68,7 +70,7 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> delayData0, delayData1;
     sc_signal<sc_uint<8>> debug0, debug1, debug2, debug3, debug4;
     sc_signal<bool> pullHigh, pullLow;
-    sc_signal<sc_uint<8>> address;
+    sc_signal<sc_uint<8>> address0, address1;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -85,10 +87,10 @@ SC_MODULE(SYSTEM)
         tb0->rst(rst_sig);
         tb0->outp0(TC0_7);
         tb0->outp1(MC5_12);
-        tb0->outp2(delayData0);
-        tb0->outp3(delayData1);
-        tb0->outp4(writeAddrData);
-        tb0->outp5(address);
+        tb0->outp2(delayData1);
+        tb0->outp3(writeAddrData);
+        tb0->outp4(address0);
+        tb0->outp5(address1);
         tb0->outp6(c0);
         tb0->outp7(c4);
 
@@ -198,8 +200,12 @@ SC_MODULE(SYSTEM)
         byteFullAdder0->inp0(writeAddrData);
         byteFullAdder0->inp1(delayData1);
         byteFullAdder0->cIn(c0);
-        byteFullAdder0->outp0(address);
+        byteFullAdder0->outp0(address0);
         byteFullAdder0->cOut(c4);
+
+        addressMangle0 = new addressMangle("addressMangle0");
+        addressMangle0->inp0(address0);
+        addressMangle0->outp0(address1);
     }
     ~SYSTEM() // destructor
     {
@@ -220,6 +226,7 @@ SC_MODULE(SYSTEM)
         delete byteReg0;
         delete byteInvertMux0;
         delete byteFullAdder0;
+        delete addressMangle0;
     }
 };
 
