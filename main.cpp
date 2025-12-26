@@ -5,7 +5,7 @@
 #include "timingProms.h"
 #include "byteSplitter.h"
 #include "modRateCount.h"
-#include "modCountClk.h"
+#include "bitFlipFlop.h"
 #include "modCount.h"
 #include "bitInvert.h"
 #include "delayProms.h"
@@ -23,7 +23,8 @@ SC_MODULE(SYSTEM)
     byteSplitter *split1;
     dacSlotAddrCount *count0;
     modRateCount *modRateCount0;
-    modCountClk *modCountClk0;
+    bitFlipFlop *bitFlipFlop0;
+    bitFlipFlop *bitFlipFlop1;
     modCount *modCount0;
     bitInvert *bitInvert0;
     bitInvert *bitInvert1;
@@ -61,8 +62,10 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<16>> MC0_12;
     sc_signal<sc_uint<8>> MC5_12;
     sc_signal<sc_uint<8>> nROW, nCOLUMN, writeAddrData;
+    sc_signal<bool> c0, c4;
     sc_signal<sc_uint<8>> delayData0, delayData1;
     sc_signal<sc_uint<8>> debug0, debug1, debug2, debug3, debug4;
+    sc_signal<bool> pullHigh, pullLow;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -71,6 +74,8 @@ SC_MODULE(SYSTEM)
         program = 0;
         preDelay = 0;
         decay = 0;
+        pullHigh = 1;
+        pullLow = 0;
 
         tb0 = new tb("tb0"); //"new" operator allocates memory space for module
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
@@ -153,10 +158,12 @@ SC_MODULE(SYSTEM)
         modRateCount0->outp1(MODDIS);
         modRateCount0->outp2(carry);
 
-        modCountClk0 = new modCountClk("modCountClk0");
-        modCountClk0->clk(nTCB7);
-        modCountClk0->inp0(carry);
-        modCountClk0->outp0(MCCK);
+        //modCountClk
+        bitFlipFlop0 = new bitFlipFlop("bitFlipFlop0");
+        bitFlipFlop0->clk(nTCB7);
+        bitFlipFlop0->clr(pullHigh);
+        bitFlipFlop0->inp0(carry);
+        bitFlipFlop0->outp0(MCCK);
 
         modCount0 = new modCount("modCount0");
         modCount0->clk(MCCK);
@@ -188,7 +195,8 @@ SC_MODULE(SYSTEM)
         delete split1;
         delete timingProms0;
         delete modRateCount0;
-        delete modCountClk0;
+        delete bitFlipFlop0;
+        delete bitFlipFlop1;
         delete modCount0;
         delete bitInvert0;
         delete delayProms0;
