@@ -12,6 +12,7 @@
 #include "writeAddrCount.h"
 #include "byteReg.h"
 #include "byteInvertMux.h"
+#include "byteFullAdder.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -32,6 +33,7 @@ SC_MODULE(SYSTEM)
     writeAddrCount *writeAddrCount0;
     byteReg *byteReg0;
     byteInvertMux *byteInvertMux0;
+    byteFullAdder *byteFullAdder0;
 
     // declare signals
     sc_clock clk_sig;
@@ -66,6 +68,7 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> delayData0, delayData1;
     sc_signal<sc_uint<8>> debug0, debug1, debug2, debug3, debug4;
     sc_signal<bool> pullHigh, pullLow;
+    sc_signal<sc_uint<8>> address;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -81,13 +84,13 @@ SC_MODULE(SYSTEM)
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
         tb0->rst(rst_sig);
         tb0->outp0(TC0_7);
-        tb0->outp1(delayData1);
+        tb0->outp1(MC5_12);
         tb0->outp2(delayData0);
-        tb0->outp3(nROW);
-        tb0->outp4(nCOLUMN);
-        tb0->outp5(writeAddrData);
-        tb0->outp6(TCB7);
-        tb0->outp7(TCB7A);
+        tb0->outp3(delayData1);
+        tb0->outp4(writeAddrData);
+        tb0->outp5(address);
+        tb0->outp6(c0);
+        tb0->outp7(c4);
 
         tim0 = new timer0("tim0");
         tim0->clk(clk_sig);
@@ -184,6 +187,19 @@ SC_MODULE(SYSTEM)
         delayProms0->program(program);
         delayProms0->outp0(delayData0);
 
+        //rowCarryOutLatch
+        bitFlipFlop1 = new bitFlipFlop("bitFlipFlop1");
+        bitFlipFlop1->clk(nTCB1);
+        bitFlipFlop1->clr(RAS);
+        bitFlipFlop1->inp0(c4);
+        bitFlipFlop1->outp0(c0);
+
+        byteFullAdder0 = new byteFullAdder("byteFullAdder0");
+        byteFullAdder0->inp0(writeAddrData);
+        byteFullAdder0->inp1(delayData1);
+        byteFullAdder0->cIn(c0);
+        byteFullAdder0->outp0(address);
+        byteFullAdder0->cOut(c4);
     }
     ~SYSTEM() // destructor
     {
@@ -203,6 +219,7 @@ SC_MODULE(SYSTEM)
         delete writeAddrCount0;
         delete byteReg0;
         delete byteInvertMux0;
+        delete byteFullAdder0;
     }
 };
 
