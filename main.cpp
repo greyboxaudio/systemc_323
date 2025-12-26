@@ -152,6 +152,9 @@ SC_MODULE(SYSTEM)
         delayDataReg0->inp4(MC5_12);
         delayDataReg0->inp5(preDelay);
         delayDataReg0->inp6(program);
+        delayDataReg0->inp7(nROW);
+        delayDataReg0->inp8(nCOLUMN);
+        delayDataReg0->inp9(RAS);
         delayDataReg0->outp0(delayData);
     }
     ~SYSTEM() // destructor
