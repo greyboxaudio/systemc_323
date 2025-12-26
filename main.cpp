@@ -17,6 +17,7 @@
 #include "gainModCtrlProm.h"
 #include "gainModProm.h"
 #include "gainProm.h"
+#include "bitNAND.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -30,6 +31,7 @@ SC_MODULE(SYSTEM)
     modRateCount *modRateCount0;
     bitFlipFlop *bitFlipFlop0;
     bitFlipFlop *bitFlipFlop1;
+    bitFlipFlop *bitFlipFlop2;
     modCount *modCount0;
     bitInvert *bitInvert0;
     bitInvert *bitInvert1;
@@ -43,6 +45,10 @@ SC_MODULE(SYSTEM)
     gainModCtrlProm *gainModCtrlProm0;
     gainModProm *gainModProm0;
     gainProm *gainProm0;
+    bitNAND *bitNAND0;
+    bitNAND *bitNAND1;
+    bitNAND *bitNAND2;
+    bitNAND *bitNAND3;
 
     // declare signals
     sc_clock clk_sig;
@@ -50,7 +56,7 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> program, ratlvl, decay, preDelay;
     sc_signal<sc_uint<8>> TC0_7, TCB2_7;
     sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig;
-    sc_signal<bool> nTCB1;
+    sc_signal<bool> nTCB1, TCB1;
     sc_signal<bool> nSyncClear;
     sc_signal<bool> DAC, nDAC;
     sc_signal<bool> DACEN;
@@ -79,7 +85,7 @@ SC_MODULE(SYSTEM)
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData;
-    sc_signal<bool> nGainModPromEnable, nGSN;
+    sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, bitFlipFlop2outp, nSelectA, compOutp0;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -196,6 +202,11 @@ SC_MODULE(SYSTEM)
         gainModCtrlProm0->outp0(gainModCtrlData);
         gainModCtrlProm0->outp1(nGainModPromEnable);
 
+        bitNAND2 = new bitNAND("bitNAND2");
+        bitNAND2->inp0(nGainModPromEnable);
+        bitNAND2->inp1(pullHigh);
+        bitNAND2->outp0(gainModPromEnabled);
+
         gainModProm0 = new gainModProm("gainModProm0");
         gainModProm0->chipEnable(nGainModPromEnable);
         gainModProm0->outpEnable(pullLow);
@@ -211,6 +222,22 @@ SC_MODULE(SYSTEM)
         gainProm0->address2(program);
         gainProm0->outp0(gainData);
         gainProm0->outp1(nGSN);
+
+        bitNAND0 = new bitNAND("bitNAND0");
+        bitNAND0->inp0(nTCB1);
+        bitNAND0->inp1(nTCB1);
+        bitNAND0->outp0(TCB1);
+
+        bitFlipFlop2 = new bitFlipFlop("bitFlipFlop2");
+        bitFlipFlop2->clk(TCB1);
+        bitFlipFlop2->clr(pullHigh);
+        bitFlipFlop2->inp0(TCB2);
+        bitFlipFlop2->outp0(bitFlipFlop2outp);
+
+        bitNAND1 = new bitNAND("bitNAND1");
+        bitNAND1->inp0(nTCB1);
+        bitNAND1->inp1(bitFlipFlop2outp);
+        bitNAND1->outp0(nGainLatch);
 
         byteReg0 = new byteReg("byteReg0");
         byteReg0->clk(nTCB1);
@@ -269,6 +296,10 @@ SC_MODULE(SYSTEM)
         delete gainModCtrlProm0;
         delete gainModProm0;
         delete gainProm0;
+        delete bitNAND0;
+        delete bitNAND1;
+        delete bitNAND2;
+        delete bitNAND3;
     }
 };
 
