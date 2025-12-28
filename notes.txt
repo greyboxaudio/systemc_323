@@ -3,3 +3,7 @@ inp_vld: moduleA tells moduleB that the data present at the input of moduleB is 
 inp_rdy: moduleB tells moduleA that it is ready to receive new data
 outp_vld: moduleB tells moduleA that the data present at the output of moduleB is valid
 outp_rdy: moduleA tells moduleB that it is ready to receive new data
+
+const sc_uint<8> d080_626[] = {};
+
+74LS00 showing input inverted OR-Gates on some schematics instead of NAND-Gates? Both are functionally equivalent though.

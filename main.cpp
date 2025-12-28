@@ -21,6 +21,7 @@
 #include "bitNAND.h"
 #include "comparator.h"
 #include "latchedMux.h"
+#include "controlLogic.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -55,11 +56,12 @@ SC_MODULE(SYSTEM)
     bitNAND *bitNAND3;
     comparator *comparator0;
     latchedMux *latchedMux0;
+    controlLogic *controlLogic0;
 
     // declare signals
     sc_clock clk_sig;
     sc_signal<bool> rst_sig;
-    sc_signal<sc_uint<8>> program, ratlvl, decay, preDelay;
+    sc_signal<sc_uint<8>> program0, decaytime0, preDelay0, program1, preDelay1, decaytime1, ratlvl;
     sc_signal<sc_uint<8>> TC0_7, TCB2_7;
     sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig, modRateCountData;
     sc_signal<bool> nTCB1, TCB1;
@@ -97,9 +99,9 @@ SC_MODULE(SYSTEM)
         // use copy constructor to define clock
         : clk_sig("clk_sig", 122, SC_NS) //(character pointer string,period units,actual units)
     {
-        program = 0;
-        preDelay = 0;
-        decay = 0;
+        program0 = 0;
+        preDelay0 = 0;
+        decaytime0 = 0;
         pullHigh = 1;
         pullLow = 0;
 
@@ -114,6 +116,14 @@ SC_MODULE(SYSTEM)
         tb0->outp5(gain);
         tb0->outp6(nGainLatch);
         tb0->outp7(nSelectA);
+
+        controlLogic0 = new controlLogic("controlLogic0");
+        controlLogic0->programInp(program0);
+        controlLogic0->predelayInp(preDelay0);
+        controlLogic0->decaytimeInp(decaytime0);
+        controlLogic0->programOutp(program1);
+        controlLogic0->predelayOutp(preDelay1);
+        controlLogic0->decaytimeOutp(decaytime1);
 
         tim0 = new timer0("tim0");
         tim0->clk(clk_sig);
@@ -182,7 +192,7 @@ SC_MODULE(SYSTEM)
 
         modRateCountProm0 = new modRateCountProm("modRateCountProm0");
         modRateCountProm0->address0(ratlvl);
-        modRateCountProm0->address1(program);
+        modRateCountProm0->address1(program1);
         modRateCountProm0->outp0(modRateCountData);
         modRateCountProm0->outp1(SNMODEN);
         modRateCountProm0->outp2(MODDIS);
@@ -207,6 +217,7 @@ SC_MODULE(SYSTEM)
         gainModCtrlProm0 = new gainModCtrlProm("gainModCtrlProm0");
         gainModCtrlProm0->chipEnable(nDAC);
         gainModCtrlProm0->outpEnable(pullLow);
+        //gainModCtrlProm0->outpEnable(MODDIS);
         gainModCtrlProm0->address0(TCB2_7);
         gainModCtrlProm0->address1(MC5_12);
         gainModCtrlProm0->outp0(gainModCtrlData);
@@ -228,8 +239,8 @@ SC_MODULE(SYSTEM)
         gainProm0->chipEnable(nDACX);
         gainProm0->outpEnable(nDACX);
         gainProm0->address0(TCB2_7);
-        gainProm0->address1(decay);
-        gainProm0->address2(program);
+        gainProm0->address1(decaytime1);
+        gainProm0->address2(program1);
         gainProm0->outp0(gainData);
         gainProm0->outp1(nGSN);
 
@@ -274,10 +285,11 @@ SC_MODULE(SYSTEM)
         delayProms0 = new delayProms("delayProms0");
         delayProms0->chipEnable(nMOD);
         delayProms0->outpEnable(pullLow);
+        //delayProms0->outpEnable(MODDIS);
         delayProms0->address0(TCB2_7);
         delayProms0->address1(MC5_12);
-        delayProms0->address2(preDelay);
-        delayProms0->address3(program);
+        delayProms0->address2(preDelay1);
+        delayProms0->address3(program1);
         delayProms0->outp0(delayData0);
 
         //rowCarryOutLatch
@@ -330,6 +342,7 @@ SC_MODULE(SYSTEM)
         delete bitNAND3;
         delete comparator0;
         delete latchedMux0;
+        delete controlLogic0;
     }
 };
 
