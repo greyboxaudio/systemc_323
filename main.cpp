@@ -179,6 +179,8 @@ SC_MODULE(SYSTEM)
         count0->outp0(TCB2_7);
         count0->outp1(TCB7);
         count0->outp2(TCB2);
+        count0->outp3(TCB7A);
+        count0->outp4(nTCB7);
 
         writeAddrCount0 = new writeAddrCount("writeAddrCount0");
         writeAddrCount0->clk(TCB7A);
@@ -190,7 +192,7 @@ SC_MODULE(SYSTEM)
         byteInvertMux0->inp0(nROW);
         byteInvertMux0->inp1(nCOLUMN);
         byteInvertMux0->outp0(writeAddrData);
-
+/*
         bitInvert0 = new bitInvert("bitInvert0");
         bitInvert0->inp0(TCB7);
         bitInvert0->outp0(nTCB7);
@@ -198,7 +200,7 @@ SC_MODULE(SYSTEM)
         bitInvert1 = new bitInvert("bitInvert1");
         bitInvert1->inp0(nTCB7);
         bitInvert1->outp0(TCB7A);
-
+*/
         modRateCountProm0 = new modRateCountProm("modRateCountProm0");
         modRateCountProm0->address0(ratlvl);
         modRateCountProm0->address1(program1);
