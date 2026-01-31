@@ -64,29 +64,14 @@ SC_MODULE(SYSTEM)
     sc_clock clk_sig;
     sc_signal<bool> rst_sig;
     sc_signal<sc_uint<8>> program0, decaytime0, preDelay0, program1, preDelay1, decaytime1, ratlvl;
-    sc_signal<sc_uint<8>> TC0_7, TCB2_7;
     sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig, modRateCountData;
-    sc_signal<bool> nTCB1, nDDTCB1, TCB1;
-    sc_signal<bool> nSyncClear;
-    sc_signal<bool> DAC, nDAC;
-    sc_signal<bool> DACEN;
-    sc_signal<bool> RAS, CAS;
-    sc_signal<bool> SARCK;
-    sc_signal<bool> nS;
-    sc_signal<bool> nMOD;
-    sc_signal<bool> nDACX;
-    sc_signal<bool> ISH;
-    sc_signal<bool> nER;
-    sc_signal<bool> nEL;
-    sc_signal<bool> nEF;
-    sc_signal<bool> nET;
-    sc_signal<bool> MSBE;
-    sc_signal<bool> LSBE;
-    sc_signal<bool> TCB2, TCB7, nTCB7, TCB7A;
+    sc_signal<bool> nSyncClear,DAC, DACEN,RAS, CAS,SARCK,nS,nMOD;
+    sc_signal<bool> nDACX,ISH,nER,nEL,nEF,nET,MSBE,LSBE;
+    sc_signal<bool> nDAC,nTCB1, nDDTCB1, TCB1,TCB2, TCB7, nTCB7, TCB7A;
     sc_signal<bool> SNMODEN, MODDIS;
     sc_signal<bool> carry, MCCK;
     sc_signal<sc_uint<16>> MC0_12;
-    sc_signal<sc_uint<8>> MC5_12;
+    sc_signal<sc_uint<8>> TC0_7, TCB2_7,MC5_12;
     sc_signal<sc_uint<8>> nROW, nCOLUMN, writeAddrData;
     sc_signal<bool> c0, c4;
     sc_signal<sc_uint<8>> delayData0, delayData1;
@@ -94,9 +79,10 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> debug2, debug3, debug4;
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
+    sc_signal<sc_uint<16>> address2;
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData, gain;
     sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, bitFlipFlop2outp, nSelectA, compOutp0;
-    sc_signal<sc_uint<16>> dram_addr;
+    
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -112,17 +98,31 @@ SC_MODULE(SYSTEM)
         tb0 = new tb("tb0"); //"new" operator allocates memory space for module
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
         tb0->rst(rst_sig);
-        tb0->outp0(debug2);
-        tb0->outp1(debug3);
-        tb0->outp2(nROW);
-        tb0->outp3(nCOLUMN);
-        tb0->outp4(delayData1);
-        tb0->outp5(address1);
-        tb0->outp6(RAS);
-        tb0->outp7(CAS);
-        tb0->outp8(dram_addr);
-        tb0->outp9(debug0);
-        tb0->outp10(debug1);
+        tb0->outp0(TC0_7);
+        tb0->outp1(TCB2_7);
+        tb0->outp2(MC5_12);
+        tb0->outp3(delayData0);
+        tb0->outp16(address2);
+        tb0->outp20(nSyncClear);
+        tb0->outp21(DAC);
+        tb0->outp22(DACEN);
+        tb0->outp23(CAS);
+        tb0->outp24(RAS);
+        tb0->outp25(SARCK);
+        tb0->outp26(nS);
+        tb0->outp27(nMOD);
+        tb0->outp28(nDACX);
+        tb0->outp29(ISH);
+        tb0->outp30(nER);
+        tb0->outp31(nEL);
+        tb0->outp32(nEF);
+        tb0->outp33(nET);
+        tb0->outp34(MSBE);
+        tb0->outp35(LSBE);
+        tb0->outp36(nDAC);
+        tb0->outp37(nTCB1);
+        tb0->outp38(TCB7);
+        tb0->outp39(pullLow);
 
         controlLogic0 = new controlLogic("controlLogic0");
         controlLogic0->programInp(program0);
@@ -317,7 +317,7 @@ SC_MODULE(SYSTEM)
         dram0->ras(RAS);
         dram0->cas(CAS);
         dram0->inp0(address1);
-        dram0->outp0(dram_addr);
+        dram0->outp0(address2);
     }
     ~SYSTEM() // destructor
     {
