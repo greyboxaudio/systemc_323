@@ -4,14 +4,16 @@ SC_MODULE(byteReg)
     sc_in<bool> clk;
     sc_in<sc_uint<8>> inp0;
     sc_out<sc_uint<8>> outp0;
+    sc_uint<8> data;
 
-    void byteReg_main(){
-        outp0.write(inp0.read());
+    void func(){
+        data = inp0.read();
+        outp0.write(data);
     }
 
     SC_CTOR(byteReg)
     {
-        SC_METHOD(byteReg_main);
+        SC_METHOD(func);
         sensitive << clk.pos();
     }
 };
