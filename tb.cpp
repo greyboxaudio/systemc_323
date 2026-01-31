@@ -42,6 +42,7 @@ void tb::sink()
         sc_uint<8> TCB2_7 = outp1.read();
         sc_uint<8> MC5_12 = outp2.read();
         sc_uint<8> delayData0 = outp3.read();
+        sc_uint<8> delayData1 = outp4.read();
         sc_uint<16> dram_addr = outp16.read(); 
         bool nSyncClear=outp20.read();
         bool DAC=outp21.read();
@@ -63,7 +64,7 @@ void tb::sink()
         bool nTCB1=outp37.read();
         bool TCB7=outp38.read();
 
-             cout << i << " " << TC0_7.to_int() << " " << TCB2_7.to_int() << " "<< MC5_12.to_int() << " "<< delayData0.to_int() << " " << nMOD << " " << nTCB1 << " "<< RAS << " "<< CAS << " " << dram_addr.to_int() << endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
+             cout << i << " " << TC0_7.to_int() << " " << TCB2_7.to_int() << " " << MC5_12.to_int() << " " << delayData0.to_int() << " " << delayData1.to_int() << " " << nMOD << " " << nTCB1 << " "<< RAS << " "<< CAS << " " << dram_addr.to_int() << endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
 
         wait();
     }

@@ -102,6 +102,7 @@ SC_MODULE(SYSTEM)
         tb0->outp1(TCB2_7);
         tb0->outp2(MC5_12);
         tb0->outp3(delayData0);
+        tb0->outp4(delayData1);
         tb0->outp16(address2);
         tb0->outp20(nSyncClear);
         tb0->outp21(DAC);
@@ -169,6 +170,21 @@ SC_MODULE(SYSTEM)
         count0->outp2(TCB2);
         count0->outp3(TCB7A);
         count0->outp4(nTCB7);
+
+        delayProms0 = new delayProms("delayProms0");
+        delayProms0->chipEnable(nMOD);
+        delayProms0->outpEnable(pullLow);
+        //delayProms0->outpEnable(MODDIS);
+        delayProms0->address0(TCB2_7);
+        delayProms0->address1(MC5_12);
+        delayProms0->address2(preDelay1);
+        delayProms0->address3(program1);
+        delayProms0->outp0(delayData0);
+
+        byteReg0 = new byteReg("byteReg0");
+        byteReg0->clk(nTCB1);
+        byteReg0->inp0(delayData0);
+        byteReg0->outp0(delayData1);
 
         writeAddrCount0 = new writeAddrCount("writeAddrCount0");
         writeAddrCount0->clk(TCB7A);
@@ -275,25 +291,6 @@ SC_MODULE(SYSTEM)
         latchedMux0->inp0(gainModData);
         latchedMux0->inp1(gainData);
         latchedMux0->outp0(gain);
-
-        delayProms0 = new delayProms("delayProms0");
-        delayProms0->chipEnable(nMOD);
-        delayProms0->outpEnable(pullLow);
-        //delayProms0->outpEnable(MODDIS);
-        delayProms0->address0(TCB2_7);
-        delayProms0->address1(MC5_12);
-        delayProms0->address2(preDelay1);
-        delayProms0->address3(program1);
-        delayProms0->outp0(delayData0);
-        delayProms0->outp1(debug0);
-        delayProms0->outp2(debug1);
-        delayProms0->outp3(debug2);
-        delayProms0->outp4(debug3);
-
-        byteReg0 = new byteReg("byteReg0");
-        byteReg0->clk(nTCB1);
-        byteReg0->inp0(delayData0);
-        byteReg0->outp0(delayData1);
 
         byteFullAdder0 = new byteFullAdder("byteFullAdder0");
         byteFullAdder0->inp0(writeAddrData);
