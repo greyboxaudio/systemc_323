@@ -7,3 +7,25 @@ outp_rdy: moduleA tells moduleB that it is ready to receive new data
 const sc_uint<8> d080_626[] = {};
 
 74LS00 showing input inverted OR-Gates on some schematics instead of NAND-Gates? Both are functionally equivalent though.
+
+eprom byte size
+0803 256
+0804 4096
+0805 4096
+0806 8192
+0807 4096
+0808 16384
+0810 256
+0811 256
+ROM = 37632 = 37,632 kB
+RAM = 64K * 16 = 1024 kB
+
+
+60 :    59 0 255 0 0 255 0 0 0
+61 :    60 0 255 0 0 255 1 0 0
+62 :    61 0 255 0 0 255 1 0 0
+63 :    62 0 254 169 0 253 1 0 0
+64 :    63 0 254 169 0 253 1 0 0
+65 :    64 0 254 169 0 253 1 0 0
+66 :    65 0 254 169 0 253 1 1 0
+67 :    66 0 255 0 169 208 1 1 0

@@ -22,6 +22,7 @@
 #include "comparator.h"
 #include "latchedMux.h"
 #include "controlLogic.h"
+#include "dram.h"
 
 SC_MODULE(SYSTEM)
 {
@@ -57,6 +58,7 @@ SC_MODULE(SYSTEM)
     comparator *comparator0;
     latchedMux *latchedMux0;
     controlLogic *controlLogic0;
+    dram *dram0;
 
     // declare signals
     sc_clock clk_sig;
@@ -94,14 +96,15 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> address0, address1;
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData, gain;
     sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, bitFlipFlop2outp, nSelectA, compOutp0;
+    sc_signal<sc_uint<16>> dram_addr;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
         : clk_sig("clk_sig", 122, SC_NS) //(character pointer string,period units,actual units)
     {
-        program0 = 0;
+        program0 = 7;
         preDelay0 = 0;
-        decaytime0 = 0;
+        decaytime0 = 15;
         pullHigh = 1;
         pullLow = 0;
 
@@ -110,12 +113,13 @@ SC_MODULE(SYSTEM)
         tb0->rst(rst_sig);
         tb0->outp0(TC0_7);
         tb0->outp1(MC5_12);
-        tb0->outp2(delayData1);
-        tb0->outp3(gainModCtrlData);
-        tb0->outp4(gainModData);
-        tb0->outp5(gain);
-        tb0->outp6(nGainLatch);
-        tb0->outp7(nSelectA);
+        tb0->outp2(writeAddrData);
+        tb0->outp3(delayData0);
+        tb0->outp4(delayData1);
+        tb0->outp5(address1);
+        tb0->outp6(RAS);
+        tb0->outp7(CAS);
+        tb0->outp8(dram_addr);
 
         controlLogic0 = new controlLogic("controlLogic0");
         controlLogic0->programInp(program0);
@@ -309,6 +313,12 @@ SC_MODULE(SYSTEM)
         addressMangle0 = new addressMangle("addressMangle0");
         addressMangle0->inp0(address0);
         addressMangle0->outp0(address1);
+
+        dram0 = new dram("dram0");
+        dram0->ras(RAS);
+        dram0->cas(CAS);
+        dram0->inp0(address1);
+        dram0->outp0(dram_addr);
     }
     ~SYSTEM() // destructor
     {
@@ -343,6 +353,7 @@ SC_MODULE(SYSTEM)
         delete comparator0;
         delete latchedMux0;
         delete controlLogic0;
+        delete dram0;
     }
 };
 
