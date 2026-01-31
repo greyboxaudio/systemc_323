@@ -42,6 +42,8 @@ SC_MODULE(SYSTEM)
     bitInvert *bitInvert0;
     bitInvert *bitInvert1;
     bitInvert *bitInvert2;
+    bitInvert *bitInvert3;
+    bitInvert *bitInvert4;
     delayProms *delayProms0;
     writeAddrCount *writeAddrCount0;
     byteReg *byteReg0;
@@ -70,8 +72,7 @@ SC_MODULE(SYSTEM)
     sc_signal<bool> nSyncClear;
     sc_signal<bool> DAC, nDAC;
     sc_signal<bool> DACEN;
-    sc_signal<bool> CAS;
-    sc_signal<bool> RAS;
+    sc_signal<bool> RAS, CAS, nRAS, nCAS;
     sc_signal<bool> SARCK;
     sc_signal<bool> nS;
     sc_signal<bool> nMOD;
@@ -314,9 +315,17 @@ SC_MODULE(SYSTEM)
         addressMangle0->inp0(address0);
         addressMangle0->outp0(address1);
 
+        bitInvert3 = new bitInvert("bitInvert3");
+        bitInvert3->inp0(RAS);
+        bitInvert3->outp0(nRAS);
+
+        bitInvert4 = new bitInvert("bitInvert4");
+        bitInvert4->inp0(CAS);
+        bitInvert4->outp0(nCAS);
+
         dram0 = new dram("dram0");
-        dram0->ras(RAS);
-        dram0->cas(CAS);
+        dram0->ras(nRAS);
+        dram0->cas(nCAS);
         dram0->inp0(address1);
         dram0->outp0(dram_addr);
     }
@@ -337,6 +346,8 @@ SC_MODULE(SYSTEM)
         delete bitInvert0;
         delete bitInvert1;
         delete bitInvert2;
+        delete bitInvert3;
+        delete bitInvert4;
         delete delayProms0;
         delete writeAddrCount0;
         delete byteReg0;

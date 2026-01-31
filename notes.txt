@@ -20,7 +20,10 @@ eprom byte size
 ROM = 37632 = 37,632 kB
 RAM = 64K * 16 = 1024 kB
 
-
+The row address, on the multiplexed address bus, is strobed in by the
+rising edge of RAS in the machine cycle at bit time (BT) 58.
+The column address is stobed in by the first 
+rising edge of CAS at BT 63.
 60 :    59 0 255 0 0 255 0 0 0
 61 :    60 0 255 0 0 255 1 0 0
 62 :    61 0 255 0 0 255 1 0 0
