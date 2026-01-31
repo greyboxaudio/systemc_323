@@ -13,7 +13,7 @@ void timer0::timer0_main(void)
     while (true)
     {
         out_val += 1;
-        if (out_val >= 256)
+        if (out_val > 255)
         {
             out_val = 0;
         }

@@ -19,8 +19,8 @@ SC_MODULE(dram)
     SC_CTOR(dram)
     {
         SC_METHOD(row_reg);
-        sensitive << ras.neg();
+        sensitive << ras.pos();
         SC_METHOD(col_reg);
-        sensitive << cas.neg();
+        sensitive << cas.pos();
     }
 };

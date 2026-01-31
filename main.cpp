@@ -42,8 +42,6 @@ SC_MODULE(SYSTEM)
     bitInvert *bitInvert0;
     bitInvert *bitInvert1;
     bitInvert *bitInvert2;
-    bitInvert *bitInvert3;
-    bitInvert *bitInvert4;
     delayProms *delayProms0;
     writeAddrCount *writeAddrCount0;
     byteReg *byteReg0;
@@ -68,11 +66,11 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> program0, decaytime0, preDelay0, program1, preDelay1, decaytime1, ratlvl;
     sc_signal<sc_uint<8>> TC0_7, TCB2_7;
     sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig, modRateCountData;
-    sc_signal<bool> nTCB1, TCB1;
+    sc_signal<bool> nTCB1, nDDTCB1, TCB1;
     sc_signal<bool> nSyncClear;
     sc_signal<bool> DAC, nDAC;
     sc_signal<bool> DACEN;
-    sc_signal<bool> RAS, CAS, nRAS, nCAS;
+    sc_signal<bool> RAS, CAS;
     sc_signal<bool> SARCK;
     sc_signal<bool> nS;
     sc_signal<bool> nMOD;
@@ -120,8 +118,8 @@ SC_MODULE(SYSTEM)
         tb0->outp3(nCOLUMN);
         tb0->outp4(delayData1);
         tb0->outp5(address1);
-        tb0->outp6(nRAS);
-        tb0->outp7(nCAS);
+        tb0->outp6(RAS);
+        tb0->outp7(CAS);
         tb0->outp8(dram_addr);
         tb0->outp9(debug0);
         tb0->outp10(debug1);
@@ -141,40 +139,30 @@ SC_MODULE(SYSTEM)
 
         timingProms0 = new timingProms("rom0");
         timingProms0->clk(clk_sig);
-        timingProms0->rst(rst_sig);
+        timingProms0->rst(rst_sig);        
         timingProms0->inp0(TC0_7);
-        timingProms0->outp0(rom0_outp_sig);
-        timingProms0->outp1(rom1_outp_sig);
-        timingProms0->outp2(nTCB1);
-
-        split0 = new byteSplitter("split0");
-        split0->inp0(rom0_outp_sig);
-        split0->outp0(nSyncClear);
-        split0->outp1(DAC);
-        split0->outp2(DACEN);
-        split0->outp3(CAS);
-        split0->outp4(RAS);
-        split0->outp5(SARCK);
-        split0->outp6(nS);
-        split0->outp7(nMOD);
-
-        split1 = new byteSplitter("split1");
-        split1->inp0(rom1_outp_sig);
-        split1->outp0(nDACX);
-        split1->outp1(ISH);
-        split1->outp2(nER);
-        split1->outp3(nEL);
-        split1->outp4(nEF);
-        split1->outp5(nET);
-        split1->outp6(MSBE);
-        split1->outp7(LSBE);
-
-        bitInvert2 = new bitInvert("bitInvert2");
-        bitInvert2->inp0(DAC);
-        bitInvert2->outp0(nDAC);
+        timingProms0->outp0(nSyncClear);
+        timingProms0->outp1(DAC);
+        timingProms0->outp2(DACEN);
+        timingProms0->outp3(CAS);
+        timingProms0->outp4(RAS);
+        timingProms0->outp5(SARCK);
+        timingProms0->outp6(nS);
+        timingProms0->outp7(nMOD);
+        timingProms0->outp8(nDACX);
+        timingProms0->outp9(ISH);
+        timingProms0->outp10(nER);
+        timingProms0->outp11(nEL);
+        timingProms0->outp12(nEF);
+        timingProms0->outp13(nET);
+        timingProms0->outp14(MSBE);
+        timingProms0->outp15(LSBE);
+        timingProms0->outp16(nDAC);
+        timingProms0->outp17(nTCB1);
+        timingProms0->outp18(nDDTCB1);
 
         count0 = new dacSlotAddrCount("count0");
-        count0->clk(nTCB1);
+        count0->clk(nDDTCB1);
         count0->clr(nSyncClear);
         count0->outp0(TCB2_7);
         count0->outp1(TCB7);
@@ -325,17 +313,9 @@ SC_MODULE(SYSTEM)
         addressMangle0->inp0(address0);
         addressMangle0->outp0(address1);
 
-        bitInvert3 = new bitInvert("bitInvert3");
-        bitInvert3->inp0(RAS);
-        bitInvert3->outp0(nRAS);
-
-        bitInvert4 = new bitInvert("bitInvert4");
-        bitInvert4->inp0(CAS);
-        bitInvert4->outp0(nCAS);
-
         dram0 = new dram("dram0");
-        dram0->ras(nRAS);
-        dram0->cas(nCAS);
+        dram0->ras(RAS);
+        dram0->cas(CAS);
         dram0->inp0(address1);
         dram0->outp0(dram_addr);
     }
@@ -356,8 +336,6 @@ SC_MODULE(SYSTEM)
         delete bitInvert0;
         delete bitInvert1;
         delete bitInvert2;
-        delete bitInvert3;
-        delete bitInvert4;
         delete delayProms0;
         delete writeAddrCount0;
         delete byteReg0;

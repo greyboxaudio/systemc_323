@@ -3,10 +3,7 @@ SC_MODULE(dacSlotAddrCount)
 {
     sc_in<bool> clk, clr;
     sc_out<sc_uint<8>> outp0;
-    sc_out<bool> outp1;
-    sc_out<bool> outp2;
-    sc_out<bool> outp3;
-    sc_out<bool> outp4;
+    sc_out<bool> outp1, outp2, outp3, outp4;
 
     sc_uint<8> counterValue{};
 
