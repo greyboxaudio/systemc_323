@@ -5,14 +5,18 @@ const sc_uint<8> d0808_626[16384] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0
 
 void delayProms::delayProms_main(void)
 {
-    sc_uint<16> modAddress = (address0.read() >> 1) + ((address1.read() << 5) & 4064);
-    sc_uint<16> dlyAddress = address0.read() + ((address2.read() & 7) << 6) + ((address3.read() & 7) << 9) + ((address2.read() & 1) << 12) + ((address3.read() & 1) << 13);
+    sc_uint<16> modAddress = (address0.read() >> 1) + ((address1.read() & 0xfe) << 5);
+    sc_uint<16> dlyAddress = address0.read() + ((address2.read() & 0x07) << 6) + ((address3.read() & 0x07) << 9) + ((address2.read() & 0x08) << 12) + ((address3.read() & 0x08) << 13);
     sc_uint<8> delayData;
+    outp1.write(dlyAddress);
+    outp2.write(modAddress);
+    outp3.write(d0808_626[dlyAddress]);
+    outp4.write(d0807[modAddress]);
     // delay data register
     if (chipEnable.read() == 1)
     {
-        //delayData = d0808_626[dlyAddress];
-        delayData = d0808[dlyAddress];
+        delayData = d0808_626[dlyAddress];
+        //delayData = d0808[dlyAddress];
     }
     else if (chipEnable.read() == 0 && outpEnable.read() == 0)
     {

@@ -32,3 +32,19 @@ rising edge of CAS at BT 63.
 65 :    64 0 254 169 0 253 1 0 0
 66 :    65 0 254 169 0 253 1 1 0
 67 :    66 0 255 0 169 208 1 1 0
+
+dlyModAddr  7 | dlyAddr 3792 | dlyModData 237 | dlyData 25 | nRow 255 | nCol 255 | dramAddr 13017
+dlyModAddr  8 | dlyAddr 3794 | dlyModData 169 | dlyData 29 | nRow 255 | nCol 255 | dramAddr 15056
+dlyModAddr  9 | dlyAddr 3796 | dlyModData  92 | dlyData 31 | nRow 255 | nCol 255 | dramAddr 15927
+dlyModAddr 10 | dlyAddr 3798 | dlyModData  53 | dlyData 33 | nRow 255 | nCol 255 | dramAddr 17000
+dlyModAddr 11 | dlyAddr 3800 | dlyModData 239 | dlyData 37 | nRow 255 | nCol 255 | dramAddr 19165
+dlyModAddr 12 | dlyAddr 3802 | dlyModData   4 | dlyData 41 | nRow 255 | nCol 255 | dramAddr 20998
+dlyModAddr 13 | dlyAddr 3804 | dlyModData 172 | dlyData 43 | nRow 255 | nCol 255 | dramAddr 22230
+dlyModAddr 14 | dlyAddr 3806 | dlyModData 114 | dlyData 48 | nRow 255 | nCol 255 | dramAddr 24675
+dlyModAddr 15 | dlyAddr 3808 | dlyModData 166 | dlyData 50 | nRow 255 | nCol 255 | dramAddr 25802
+dlyModAddr 16 | dlyAddr 3810 | dlyModData  60 | dlyData 52 | nRow 255 | nCol 255 | dramAddr 26742
+dlyModAddr 17 | dlyAddr 3812 | dlyModData 173 | dlyData 55 | nRow 255 | nCol 255 | dramAddr 28376
+dlyModAddr 18 | dlyAddr 3814 | dlyModData  30 | dlyData 56 | nRow 255 | nCol 255 | dramAddr 28730
+dlyModAddr 19 | dlyAddr 3816 | dlyModData 237 | dlyData 58 | nRow 255 | nCol 255 | dramAddr 29913
+dlyModAddr 20 | dlyAddr 3818 | dlyModData 174 | dlyData 61 | nRow 255 | nCol 255 | dramAddr 31450
+dlyModAddr 21 | dlyAddr 3820 | dlyModData 229 | dlyData 63 | nRow 255 | nCol 255 | dramAddr 32457

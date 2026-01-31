@@ -8,8 +8,8 @@ void gainProm::gainProm_main(void)
     sc_uint<8> promData{};
     if (chipEnable.read() == 0 && outpEnable.read() == 0)
     {
-        //promData = d0806_626[promAddress];
-        promData = d0806[promAddress];
+        promData = d0806_626[promAddress];
+        //promData = d0806[promAddress];
     }
     outp0.write(promData);
     outp1.write(promData[7]);

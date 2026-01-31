@@ -47,8 +47,10 @@ void tb::sink()
         sc_uint<8> indata6 = outp6.read();
         sc_uint<8> indata7 = outp7.read();
         sc_uint<16> indata8 = outp8.read();
+        sc_uint<16> indata9 = outp9.read();
+        sc_uint<16> indata10 = outp10.read();
 
-             cout << i << " :\t" << indata0.to_int()<< " " << indata6.to_int()<<" " << indata7.to_int()<<" " << indata5.to_int() << " " << indata8.to_int()<< endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
+             cout << "dlyModAddr " << indata10.to_int()<< " | dlyAddr "<< indata9.to_int()<< " | dlyModData "<< indata0.to_int()<< " | dlyData " << indata1.to_int()<<" | nRow " << indata2.to_int()<<" | nCol " <<  indata3.to_int()<<" | dramAddr " <<  indata8.to_int()<< endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
 
         wait();
     }

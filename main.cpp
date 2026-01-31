@@ -92,7 +92,8 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> nROW, nCOLUMN, writeAddrData;
     sc_signal<bool> c0, c4;
     sc_signal<sc_uint<8>> delayData0, delayData1;
-    sc_signal<sc_uint<8>> debug0, debug1, debug2, debug3, debug4;
+    sc_signal<sc_uint<16>> debug0, debug1;
+    sc_signal<sc_uint<8>> debug2, debug3, debug4;
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData, gain;
@@ -103,24 +104,27 @@ SC_MODULE(SYSTEM)
         // use copy constructor to define clock
         : clk_sig("clk_sig", 122, SC_NS) //(character pointer string,period units,actual units)
     {
-        program0 = 7;
-        preDelay0 = 0;
-        decaytime0 = 7;
+        program0 = 16;
+        preDelay0 = 9;
+        decaytime0 = 16;
+        ratlvl = 0;
         pullHigh = 1;
         pullLow = 0;
 
         tb0 = new tb("tb0"); //"new" operator allocates memory space for module
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
         tb0->rst(rst_sig);
-        tb0->outp0(TC0_7);
-        tb0->outp1(MC5_12);
-        tb0->outp2(program1);
-        tb0->outp3(preDelay1);
-        tb0->outp4(decaytime1);
+        tb0->outp0(debug2);
+        tb0->outp1(debug3);
+        tb0->outp2(nROW);
+        tb0->outp3(nCOLUMN);
+        tb0->outp4(delayData1);
         tb0->outp5(address1);
         tb0->outp6(nRAS);
         tb0->outp7(nCAS);
         tb0->outp8(dram_addr);
+        tb0->outp9(debug0);
+        tb0->outp10(debug1);
 
         controlLogic0 = new controlLogic("controlLogic0");
         controlLogic0->programInp(program0);
@@ -282,11 +286,6 @@ SC_MODULE(SYSTEM)
         latchedMux0->inp1(gainData);
         latchedMux0->outp0(gain);
 
-        byteReg0 = new byteReg("byteReg0");
-        byteReg0->clk(nTCB1);
-        byteReg0->inp0(delayData0);
-        byteReg0->outp0(delayData1);
-
         delayProms0 = new delayProms("delayProms0");
         delayProms0->chipEnable(nMOD);
         delayProms0->outpEnable(pullLow);
@@ -296,13 +295,15 @@ SC_MODULE(SYSTEM)
         delayProms0->address2(preDelay1);
         delayProms0->address3(program1);
         delayProms0->outp0(delayData0);
+        delayProms0->outp1(debug0);
+        delayProms0->outp2(debug1);
+        delayProms0->outp3(debug2);
+        delayProms0->outp4(debug3);
 
-        //rowCarryOutLatch
-        bitFlipFlop1 = new bitFlipFlop("bitFlipFlop1");
-        bitFlipFlop1->clk(nTCB1);
-        bitFlipFlop1->clr(RAS);
-        bitFlipFlop1->inp0(c4);
-        bitFlipFlop1->outp0(c0);
+        byteReg0 = new byteReg("byteReg0");
+        byteReg0->clk(nTCB1);
+        byteReg0->inp0(delayData0);
+        byteReg0->outp0(delayData1);
 
         byteFullAdder0 = new byteFullAdder("byteFullAdder0");
         byteFullAdder0->inp0(writeAddrData);
@@ -310,6 +311,13 @@ SC_MODULE(SYSTEM)
         byteFullAdder0->cIn(c0);
         byteFullAdder0->outp0(address0);
         byteFullAdder0->cOut(c4);
+
+        //rowCarryOutLatch
+        bitFlipFlop1 = new bitFlipFlop("bitFlipFlop1");
+        bitFlipFlop1->clk(nTCB1);
+        bitFlipFlop1->clr(RAS);
+        bitFlipFlop1->inp0(c4);
+        bitFlipFlop1->outp0(c0);
 
         addressMangle0 = new addressMangle("addressMangle0");
         addressMangle0->inp0(address0);
