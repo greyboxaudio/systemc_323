@@ -16,6 +16,6 @@ SC_MODULE(tb)
     SC_CTOR(tb)
     {
         //SC_CTHREAD(source, clk.pos());
-        SC_CTHREAD(sink, clk.pos());
+        SC_CTHREAD(sink, clk.neg());
     }
 };

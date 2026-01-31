@@ -48,7 +48,7 @@ void tb::sink()
         sc_uint<8> indata7 = outp7.read();
         sc_uint<16> indata8 = outp8.read();
 
-             cout << i << " :\t" << indata0.to_int() <<" " << indata1.to_int()<<" " << indata2.to_int() <<" " << indata3.to_int()<<" " << indata4.to_int()<<" " << indata5.to_int()<<" " << indata6.to_int()<<" " << indata7.to_int() << " " << indata8.to_int()<< endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
+             cout << i << " :\t" << indata0.to_int()<< " " << indata6.to_int()<<" " << indata7.to_int()<<" " << indata5.to_int() << " " << indata8.to_int()<< endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
 
         wait();
     }

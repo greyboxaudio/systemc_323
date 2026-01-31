@@ -105,7 +105,7 @@ SC_MODULE(SYSTEM)
     {
         program0 = 7;
         preDelay0 = 0;
-        decaytime0 = 15;
+        decaytime0 = 7;
         pullHigh = 1;
         pullLow = 0;
 
@@ -114,12 +114,12 @@ SC_MODULE(SYSTEM)
         tb0->rst(rst_sig);
         tb0->outp0(TC0_7);
         tb0->outp1(MC5_12);
-        tb0->outp2(writeAddrData);
-        tb0->outp3(delayData0);
-        tb0->outp4(delayData1);
+        tb0->outp2(program1);
+        tb0->outp3(preDelay1);
+        tb0->outp4(decaytime1);
         tb0->outp5(address1);
-        tb0->outp6(RAS);
-        tb0->outp7(CAS);
+        tb0->outp6(nRAS);
+        tb0->outp7(nCAS);
         tb0->outp8(dram_addr);
 
         controlLogic0 = new controlLogic("controlLogic0");
