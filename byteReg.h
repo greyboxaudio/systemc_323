@@ -6,14 +6,18 @@ SC_MODULE(byteReg)
     sc_out<sc_uint<8>> outp0;
     sc_uint<8> data;
 
-    void func(){
-        data = inp0.read();
+    void latch(){
         outp0.write(data);
+    }
+    void read(){
+        data = inp0.read();
     }
 
     SC_CTOR(byteReg)
     {
-        SC_METHOD(func);
+        SC_METHOD(latch);
         sensitive << clk.pos();
+        SC_METHOD(read);
+        sensitive << inp0;
     }
 };
