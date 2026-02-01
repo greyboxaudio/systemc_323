@@ -9,11 +9,11 @@ SC_MODULE(writeAddrCount)
 
     void writeAddrCount_main()
     {
-        if (counterValue >= 65536)
+        if (counterValue > 65535)
         {
             counterValue = 0;
         }
-        outp0.write(counterValue & 255);
+        outp0.write(counterValue & 0xff);
         outp1.write(counterValue >> 8);
         counterValue += 1;
     }
@@ -21,6 +21,6 @@ SC_MODULE(writeAddrCount)
     SC_CTOR(writeAddrCount)
     {
         SC_METHOD(writeAddrCount_main);
-        sensitive << clk.neg();
+        sensitive << clk.pos();
     }
 };

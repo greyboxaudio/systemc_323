@@ -103,6 +103,8 @@ SC_MODULE(SYSTEM)
         tb0->outp2(MC5_12);
         tb0->outp3(delayData0);
         tb0->outp4(delayData1);
+        tb0->outp5(nROW);
+        tb0->outp6(nCOLUMN);
         tb0->outp16(address2);
         tb0->outp20(nSyncClear);
         tb0->outp21(DAC);
