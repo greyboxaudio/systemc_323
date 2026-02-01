@@ -36,7 +36,7 @@
 void tb::sink()
 {
     // read values on outp port
-    for (int i = 0; i < 128; i++)
+    for (int i = 0; i < 130; i++)
     {
         sc_uint<8> TC0_7 = outp0.read();
         sc_uint<8> TCB2_7 = outp1.read();
@@ -45,6 +45,9 @@ void tb::sink()
         sc_uint<8> delayData1 = outp4.read();
         sc_uint<8> nROW = outp5.read();
         sc_uint<8> nCOL = outp6.read();
+        sc_uint<8> writeAddr = outp7.read();
+        sc_uint<8> addr0 = outp8.read();
+        sc_uint<8> addr1 = outp9.read();
         sc_uint<16> dram_addr = outp16.read(); 
         bool nSyncClear=outp20.read();
         bool DAC=outp21.read();
@@ -66,7 +69,7 @@ void tb::sink()
         bool nTCB1=outp37.read();
         bool TCB7=outp38.read();
 
-             cout << i << " " << TC0_7.to_int() << " " << TCB2_7.to_int() << " " << MC5_12.to_int() << " " << delayData0.to_int() << " " << delayData1.to_int() << " " << nROW.to_int() << " " << nCOL.to_int() << " " << TCB7 << " " << dram_addr << endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
+             cout << i << " " << TC0_7.to_int() << " " << TCB2_7.to_int() << " " << MC5_12.to_int() << " " << delayData0.to_int() <<  " " << nROW.to_int() << " " << nCOL.to_int()<< " " << writeAddr.to_int() <<" " << delayData1.to_int()<<" " << RAS <<" " << CAS << " " << dram_addr << endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
 
         wait();
     }

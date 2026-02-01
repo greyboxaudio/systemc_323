@@ -105,6 +105,9 @@ SC_MODULE(SYSTEM)
         tb0->outp4(delayData1);
         tb0->outp5(nROW);
         tb0->outp6(nCOLUMN);
+        tb0->outp7(writeAddrData);
+        tb0->outp8(address0);
+        tb0->outp9(address1);
         tb0->outp16(address2);
         tb0->outp20(nSyncClear);
         tb0->outp21(DAC);
@@ -198,15 +201,24 @@ SC_MODULE(SYSTEM)
         byteInvertMux0->inp0(nROW);
         byteInvertMux0->inp1(nCOLUMN);
         byteInvertMux0->outp0(writeAddrData);
-/*
-        bitInvert0 = new bitInvert("bitInvert0");
-        bitInvert0->inp0(TCB7);
-        bitInvert0->outp0(nTCB7);
 
-        bitInvert1 = new bitInvert("bitInvert1");
-        bitInvert1->inp0(nTCB7);
-        bitInvert1->outp0(TCB7A);
-*/
+        byteFullAdder0 = new byteFullAdder("byteFullAdder0");
+        byteFullAdder0->inp0(writeAddrData);
+        byteFullAdder0->inp1(delayData1);
+        byteFullAdder0->cIn(c0);
+        byteFullAdder0->outp0(address0);
+        byteFullAdder0->cOut(c4);
+
+        bitFlipFlop1 = new bitFlipFlop("bitFlipFlop1");
+        bitFlipFlop1->clk(nTCB1);
+        bitFlipFlop1->clr(RAS);
+        bitFlipFlop1->inp0(c4);
+        bitFlipFlop1->outp0(c0);
+
+        addressMangle0 = new addressMangle("addressMangle0");
+        addressMangle0->inp0(address0);
+        addressMangle0->outp0(address1);
+
         modRateCountProm0 = new modRateCountProm("modRateCountProm0");
         modRateCountProm0->address0(ratlvl);
         modRateCountProm0->address1(program1);
@@ -225,6 +237,12 @@ SC_MODULE(SYSTEM)
         bitFlipFlop0->clr(pullHigh);
         bitFlipFlop0->inp0(carry);
         bitFlipFlop0->outp0(MCCK);
+
+        dram0 = new dram("dram0");
+        dram0->ras(RAS);
+        dram0->cas(CAS);
+        dram0->inp0(address1);
+        dram0->outp0(address2);
 
         modCount0 = new modCount("modCount0");
         modCount0->clk(MCCK);
@@ -293,30 +311,6 @@ SC_MODULE(SYSTEM)
         latchedMux0->inp0(gainModData);
         latchedMux0->inp1(gainData);
         latchedMux0->outp0(gain);
-
-        byteFullAdder0 = new byteFullAdder("byteFullAdder0");
-        byteFullAdder0->inp0(writeAddrData);
-        byteFullAdder0->inp1(delayData1);
-        byteFullAdder0->cIn(c0);
-        byteFullAdder0->outp0(address0);
-        byteFullAdder0->cOut(c4);
-
-        //rowCarryOutLatch
-        bitFlipFlop1 = new bitFlipFlop("bitFlipFlop1");
-        bitFlipFlop1->clk(nTCB1);
-        bitFlipFlop1->clr(RAS);
-        bitFlipFlop1->inp0(c4);
-        bitFlipFlop1->outp0(c0);
-
-        addressMangle0 = new addressMangle("addressMangle0");
-        addressMangle0->inp0(address0);
-        addressMangle0->outp0(address1);
-
-        dram0 = new dram("dram0");
-        dram0->ras(RAS);
-        dram0->cas(CAS);
-        dram0->inp0(address1);
-        dram0->outp0(address2);
     }
     ~SYSTEM() // destructor
     {

@@ -21,6 +21,6 @@ SC_MODULE(writeAddrCount)
     SC_CTOR(writeAddrCount)
     {
         SC_METHOD(writeAddrCount_main);
-        sensitive << clk.pos();
+        sensitive << clk.neg();
     }
 };
