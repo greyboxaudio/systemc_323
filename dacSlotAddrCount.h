@@ -9,7 +9,6 @@ SC_MODULE(dacSlotAddrCount)
 
     void dacSlotAddrCount_main()
     {
-        counterValue += 1;
         if (clr.read() == 0)
         {
             counterValue = 0;
@@ -19,6 +18,7 @@ SC_MODULE(dacSlotAddrCount)
         outp3.write(counterValue[5]);
         outp4.write(!counterValue[5]);
         outp2.write(counterValue[0]);
+        counterValue += 1;
     }
 
     SC_CTOR(dacSlotAddrCount)

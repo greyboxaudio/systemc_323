@@ -14,7 +14,6 @@ void timingProms::func(void)
 
         while (true)
         {
-                address = inp0.read();
                 data0 = d0810[address];
                 data1 = d0811[address];
                 data2 = !address[1];
@@ -37,6 +36,7 @@ void timingProms::func(void)
                 outp16.write(!data0[1]);
                 outp17.write(data2);
                 outp18.write(data2);
+                address = inp0.read();
                 wait();
         }
 }

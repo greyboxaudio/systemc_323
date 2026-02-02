@@ -75,14 +75,12 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> nROW, nCOLUMN, writeAddrData;
     sc_signal<bool> c0, c4;
     sc_signal<sc_uint<8>> delayData0, delayData1;
-    sc_signal<sc_uint<16>> debug0, debug1;
-    sc_signal<sc_uint<8>> debug2, debug3, debug4;
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
     sc_signal<sc_uint<16>> address2;
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData, gain;
     sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, bitFlipFlop2outp, nSelectA, compOutp0;
-    
+    sc_signal<bool> debug0;
     
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -185,6 +183,7 @@ SC_MODULE(SYSTEM)
         delayProms0->address2(preDelay1);
         delayProms0->address3(program1);
         delayProms0->outp0(delayData0);
+        delayProms0->outp1(debug0);
 
         byteReg0 = new byteReg("byteReg0");
         byteReg0->clk(nTCB1);

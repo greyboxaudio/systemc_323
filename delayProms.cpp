@@ -10,18 +10,20 @@ void delayProms::func(void)
     sc_uint<16> dlyAddress = address0.read() + ((address2.read() & 0x07) << 6) + ((address3.read() & 0x07) << 9) + ((address2.read() & 0x08) << 12) + ((address3.read() & 0x08) << 13);
 
     // delay data output
-    if (chipEnable.read() == 1)
+    bool nMOD = chipEnable.read();
+    outp1.write(nMOD);
+    if ( nMOD == 1)
     {
-        delayData = d0807[modAddress];
+        delayData = d0808_626[dlyAddress];
         //delayData = d0808[dlyAddress];
     }
     /*else if (chipEnable.read() == 0 && outpEnable.read() == 0)
     {
         delayData = d0807[modAddress];
     }*/
-    else
-    {
-        delayData = d0808_626[dlyAddress];
+    else{
+        delayData = d0807[modAddress];
+
         //delayData = 0; // not 100% sure if this is equivalent circuit behaviour!
     }
     outp0.write(delayData);

@@ -12,12 +12,13 @@ void timer0::timer0_main(void)
 
     while (true)
     {
-        out_val += 1;
         if (out_val > 255)
         {
             out_val = 0;
         }
-        outp0.write(out_val); // write output
+        outp0.write(out_val); 
+        out_val += 1;
+        // write output
         wait();
     }
 }
