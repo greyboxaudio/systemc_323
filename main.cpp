@@ -126,7 +126,7 @@ SC_MODULE(SYSTEM)
         tb0->outp36(nDAC);
         tb0->outp37(nTCB1);
         tb0->outp38(TCB7);
-        tb0->outp39(pullLow);
+        tb0->outp39(debug0);
 
         controlLogic0 = new controlLogic("controlLogic0");
         controlLogic0->programInp(program0);

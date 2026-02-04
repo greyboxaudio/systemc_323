@@ -7,11 +7,14 @@ SC_MODULE(delayProms)
     sc_out<sc_uint<8>> outp0; //delayData
     sc_out<bool> outp1;
 
-    void func();
+    void addr_func();
+    void ce_func();
 
     SC_CTOR(delayProms)
     {
-        SC_METHOD(func);
-        sensitive << chipEnable << address0 << address1 << address2 << address3 <<  outpEnable;
+        SC_METHOD(addr_func);
+        sensitive << address0 << address1 << address2 << address3;
+        SC_METHOD(ce_func);
+        sensitive << chipEnable;
     }
 };
