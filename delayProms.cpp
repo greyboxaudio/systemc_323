@@ -6,13 +6,13 @@ const sc_uint<8> d0808_626[16384] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0
 sc_uint<8> delayData;
 sc_uint<16> modAddress;
 sc_uint<16> dlyAddress;
-bool nMOD;
+bool enable;
 void delayProms::addr_func(void)
 {
     modAddress = (address0.read() >> 1) + ((address1.read() & 0xfe) << 5);
     dlyAddress = address0.read() + ((address2.read() & 0x07) << 6) + ((address3.read() & 0x07) << 9) + ((address2.read() & 0x08) << 12) + ((address3.read() & 0x08) << 13);
     // delay data output
-    if ( nMOD == 1)
+    if ( enable == 1)
     {
         delayData = d0808_626[dlyAddress];
         //delayData = d0808[dlyAddress];
@@ -30,6 +30,6 @@ void delayProms::addr_func(void)
 }
 void delayProms::ce_func(void)
 {
-    nMOD = chipEnable.read();
-    outp1.write(nMOD);
+    enable = chipEnable.read();
+    outp1.write(enable);
 }
