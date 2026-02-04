@@ -176,14 +176,11 @@ SC_MODULE(SYSTEM)
 
         delayProms0 = new delayProms("delayProms0");
         delayProms0->chipEnable(nMOD);
-        delayProms0->outpEnable(pullLow);
-        //delayProms0->outpEnable(MODDIS);
         delayProms0->address0(TCB2_7);
         delayProms0->address1(MC5_12);
         delayProms0->address2(preDelay1);
         delayProms0->address3(program1);
         delayProms0->outp0(delayData0);
-        delayProms0->outp1(debug0);
 
         byteReg0 = new byteReg("byteReg0");
         byteReg0->clk(nTCB1);

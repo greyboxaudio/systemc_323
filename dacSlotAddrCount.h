@@ -14,10 +14,10 @@ SC_MODULE(dacSlotAddrCount)
             counterValue = 0;
         }
         outp0.write(counterValue);
-        outp1.write(counterValue[5]);
-        outp3.write(counterValue[5]);
-        outp4.write(!counterValue[5]);
-        outp2.write(counterValue[0]);
+        outp1.write(counterValue[5].to_bool());
+        outp3.write(counterValue[5].to_bool());
+        outp4.write(!counterValue[5].to_bool());
+        outp2.write(counterValue[0].to_bool());
         counterValue += 1;
     }
 
