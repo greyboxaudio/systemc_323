@@ -11,7 +11,7 @@ SC_MODULE(SYSTEM)
     // declare signals
     sc_clock clk_sig;
     sc_signal<bool> rst_sig;
-    sc_signal<sc_uint<8>> program0, decaytime0, preDelay0, ratlvl;
+    sc_signal<sc_uint<4>> program0, decaytime0, preDelay0, ratlvl;
     sc_signal<sc_uint<8>> gain;
     sc_signal<sc_uint<16>> address;
     

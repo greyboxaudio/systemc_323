@@ -36,7 +36,7 @@
 void tb323::sink()
 {
     // read values on outp port
-    for (int i = 0; i < 80; i++)
+    for (int i = 0; i < 128; i++)
     {
         sc_uint<16> address = outp0.read();
         sc_uint<8> gain = outp1.read();

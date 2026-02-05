@@ -2,7 +2,7 @@
 SC_MODULE(sg323)
 {
     sc_in<bool> clk, rst;
-    sc_in<sc_uint<8>> inp0, inp1, inp2;
+    sc_in<sc_uint<4>> inp0, inp1, inp2;
     sc_out<sc_uint<16>> outp0;
     sc_out<sc_uint<8>> outp1;
     // keep the module down to declaring ports, threads and constructors and leave all the behavioural functionality to other files
