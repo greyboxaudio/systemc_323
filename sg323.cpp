@@ -34,7 +34,8 @@ void sg323::func(void)
 
         outp0.write(dramAddress);
         outp1.write(address0);
-
+        // " | " << .to_int() <<
+        cout << timer0.to_int() << " | pg " << program.to_int() <<" | pd " << predly.to_int() <<" | dc " << decay.to_int() << " | TCB2_7 " << TCB2_7.to_int() <<" | TCB2 " << TCB2 <<" | TCB7 " << TCB7A <<" | writeAddr " << writeAddress.to_int() << " | dlyData0 " << dlyData0.to_int() <<" | dlydata1 " << dlyData1.to_int() <<" | addr0 " << address0.to_int() << " | RAS " << RAS << " | CAS " << CAS <<" | dram " << dramAddress.to_int() << endl;
         //dram address
         if (RAS == 1 && RAS_flag == 0)
         {
@@ -108,7 +109,10 @@ void sg323::func(void)
 
         // dac slot address counter
         TCB7A_flag = TCB7A;
-        TCB2_7 += 1;
+        if (nTCB1 == 1 && nTCB1_flag == 0)
+        {
+            TCB2_7 += 1;
+        }
         TCB7A = TCB2_7[5].to_bool();
         TCB2 = TCB2_7[0].to_bool();
         if (nSYNCCLEAR == 0)

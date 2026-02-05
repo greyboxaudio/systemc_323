@@ -41,7 +41,7 @@ void tb323::sink()
         sc_uint<16> address = outp0.read();
         sc_uint<8> gain = outp1.read();
 
-             cout << i << " " << address.to_int() << " " << gain.to_int() << endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
+            // cout << i << " " << address.to_int() << " " << gain.to_int() << endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
 
         wait();
     }
