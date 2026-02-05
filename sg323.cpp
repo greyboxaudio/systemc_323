@@ -9,7 +9,7 @@ void sg323::func(void)
     sc_uint<4> grayCode[16]{15, 14, 12, 13, 9, 8, 10, 11, 3, 2, 0, 1, 5, 4, 6, 7};
     sc_uint<8> timer0, TCB2_7, MC5_12;
     sc_uint<8> data0, data1, nROW, nCOL;
-    bool nTCB1, nMOD, RAS, CAS, nSYNCCLEAR, TCB7A, TCB2, cOUT, cIN;
+    bool nTCB1, nMOD, RAS, CAS, nSYNCCLEAR, TCB7A, TCB2, carry;
     bool nTCB1_flag, TCB7A_flag, RAS_flag, CAS_flag;
     sc_uint<16> dlyAddress, dlyModAddress, writeAddress, dramAddress;
     sc_uint<8> dlyData0, dlyData1, writeAddrData, address0, address1, rowAddress, colAddress;
@@ -35,7 +35,11 @@ void sg323::func(void)
         outp0.write(dramAddress);
         outp1.write(address0);
         // " | " << .to_int() <<
-        cout << timer0.to_int() << " | pg " << program.to_int() <<" | pd " << predly.to_int() <<" | dc " << decay.to_int() << " | TCB2_7 " << TCB2_7.to_int() <<" | TCB2 " << TCB2 <<" | TCB7 " << TCB7A <<" | writeAddr " << writeAddress.to_int() << " | dlyData0 " << dlyData0.to_int() <<" | dlydata1 " << dlyData1.to_int() <<" | addr0 " << address0.to_int() << " | RAS " << RAS << " | CAS " << CAS <<" | dram " << dramAddress.to_int() << endl;
+        cout << timer0.to_int() << " | pg " << program.to_int() <<" | pd " << predly.to_int() <<" | dc " << decay.to_int() << " | TCB2_7 " << TCB2_7.to_int() <<" | TCB2 " << TCB2 <<" | TCB7 " << TCB7A <<" | addr0 " << address0.to_int() <<" | addr1 " << address1.to_int() << " | RAS " << RAS << " | row " << rowAddress.to_int() <<" | CAS " << CAS <<" | col " << colAddress.to_int() <<" | dram " << dramAddress.to_int() << endl;
+
+        //address bit shift
+        address1 = address0[6] + ((address0 & 0x3f)<< 1) + (address0[7] << 7);
+        
         //dram address
         if (RAS == 1 && RAS_flag == 0)
         {
@@ -47,22 +51,17 @@ void sg323::func(void)
            dramAddress = rowAddress + (colAddress << 8);
         }
 
-        //address bit shift
-        address1 = address0[6] + ((address0 & 0x3f)<< 1) + (address0[7] << 7);
-
         // row carry out latch
         if (nTCB1 == 1 && nTCB1_flag == 0)
         {
-            cIN = cOUT & RAS;
+            carry = carry & RAS;
         }
         // delay adder
         for  (sc_uint<8> i = 0; i < 8; i++)
         {
-            address0[i] = writeAddrData[i] ^ dlyData1[i] ^ cIN;
-            cIN = (writeAddrData[i] & dlyData1[i]) | (cIN & (writeAddrData[i] ^ dlyData1[i]));
+            address0[i] = writeAddrData[i] ^ dlyData1[i] ^ carry;
+            carry = (writeAddrData[i] & dlyData1[i]) | (carry & (writeAddrData[i] ^ dlyData1[i]));
         }
-        cOUT = cIN;
-        cIN = 0;
 
         // row/col mux
         if (TCB2 == 0)
