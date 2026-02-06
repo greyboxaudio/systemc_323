@@ -1,2 +1,2 @@
-main: main.cpp tb.cpp timer0.cpp timer1.cpp timer2.cpp timer3.cpp timingProms.cpp modRateCountProm.cpp
-	gcc -o main main.cpp tb.cpp timer0.cpp timer1.cpp timer2.cpp timer3.cpp timingProms.cpp modRateCountProm.cpp -I . -I /opt/systemc/include -L /opt/systemc/lib -lsystemc -lstdc++ -lm
+main: main.cpp tb.cpp timer0.cpp timer1.cpp timer2.cpp timer3.cpp timingProms.cpp modRateCountProm.cpp delayProms.cpp
+	gcc -o main main.cpp tb.cpp timer0.cpp timer1.cpp timer2.cpp timer3.cpp timingProms.cpp modRateCountProm.cpp delayProms.cpp -I . -I /opt/systemc/include -L /opt/systemc/lib -lsystemc -lstdc++ -lm

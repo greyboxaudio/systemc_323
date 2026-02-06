@@ -1,16 +1,19 @@
 #include <systemc.h>
 SC_MODULE(delayProms)
 {
-    sc_in<bool> chipEnable; //nMOD, MODDIS
-    sc_in<sc_uint<8>> address0,address1,address2,address3; //TCB2_7
+    sc_in<bool> ce0, ce1; //nMOD, MODDIS
+    sc_in<sc_uint<8>> inp0,inp1,inp2; //TCB2_7
+    sc_in<sc_uint<4>> inp3, inp4;
+    sc_out<sc_uint<8>> outp0, outp1; //delayData
 
-    sc_out<sc_uint<8>> outp0; //delayData
-
-    void addr_func();
+    void dlyData();
+    void modData();
 
     SC_CTOR(delayProms)
     {
-        SC_METHOD(addr_func);
-        sensitive << chipEnable << address0 << address1 << address2 << address3;
+        SC_METHOD(dlyData);
+        sensitive << ce1.neg();
+        SC_METHOD(modData);
+        sensitive << ce0.neg();
     }
 };

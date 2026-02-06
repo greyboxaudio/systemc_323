@@ -11,12 +11,13 @@
 #include "invert.h"
 #include "flipFlop.h"
 #include "modRateCountProm.h"
+#include "delayProms.h"
 /*
 #include "byteSplitter.h"
 
 #include "bitFlipFlop.h"
 #include "modCount.h"
-#include "delayProms.h"
+
 #include "writeAddrCount.h"
 #include "byteReg.h"
 #include "byteInvertMux.h"
@@ -43,8 +44,10 @@ SC_MODULE(SYSTEM)
     timingProms *timingProms0;
     octalFlipFlop *octalFlipFlop0,*octalFlipFlop1;
     invert *invert0,*invert1,*invert2,*invert3,*invert4,*invert5,*invert6,*invert7;
+    invert *invert8;
     flipFlop *flipFlop0,*flipFlop1,*flipFlop2;
     modRateCountProm *modRateCountProm0;
+    delayProms *delayProms0;
     /*
     byteSplitter *split0;
     byteSplitter *split1;
@@ -57,7 +60,7 @@ SC_MODULE(SYSTEM)
     invert *invert0;
     invert *invert1;
     invert *invert2;
-    delayProms *delayProms0;
+    
     writeAddrCount *writeAddrCount0;
     byteReg *byteReg0;
     byteInvertMux *byteInvertMux0;
@@ -86,10 +89,10 @@ SC_MODULE(SYSTEM)
     sc_signal<bool> nSyncClear1, DAC1, DACEN1, RAS1, CAS1, SARCK1, nS1, nMOD1;
     sc_signal<bool> nDACX1, ISH1, nER1, nEL1, nEF1, nET1, MSBE1, LSBE1;
     sc_signal<bool> nDAC, TC1, nTC1, nTCB1, DTCB1, nDDTCB1, TCB1, TCB2, TCB7, nTCB7, TCB7A;
-    sc_signal<bool> SNMODEN, MODDIS;
+    sc_signal<bool> SNMODEN, MODDIS, MOD, nMODB;
     sc_signal<bool> MCCK, nMCCK;
     sc_signal<sc_uint<16>> MC0_8;
-    sc_signal<sc_uint<8>> TC0_7, TCB2_7, MC5_12, MC6_12;
+    sc_signal<sc_uint<8>> TC0_7, TCB2_7,TCB3_7, MC6_12;
     sc_signal<sc_uint<8>> nROW, nCOLUMN, writeAddrData;
     sc_signal<bool> modCarry, nModCarry;
     sc_signal<sc_uint<8>> delayData0, delayData1;
@@ -116,7 +119,7 @@ SC_MODULE(SYSTEM)
         tb0->rst(rst_sig);
         tb0->outp0(TC0_7);
         tb0->outp1(TCB2_7);
-        tb0->outp2(MC5_12);
+        tb0->outp2(MC6_12);
         tb0->outp3(delayData0);
         tb0->outp4(delayData1);
         tb0->outp5(nROW);
@@ -245,8 +248,9 @@ SC_MODULE(SYSTEM)
         tim1->clk(nDDTCB1);
         tim1->clr(nSyncClear1);
         tim1->outp0(TCB2_7);
-        tim1->outp1(nc2);
-        tim1->outp5(TCB7);
+        tim1->outp1(TCB3_7);
+        tim1->outp2(TCB2);
+        tim1->outp3(TCB7);
 
         modRateCountProm0 = new modRateCountProm("modRateCountProm");
         modRateCountProm0->inp0(ratlvl);
@@ -282,7 +286,25 @@ SC_MODULE(SYSTEM)
         tim3->clk(nMCCK);
         tim3->outp0(MC0_8);
         tim3->outp1(MC6_12);
-        tim3->outp2(MC5_12);
+
+        invert7 = new invert("inv_nMOD");
+        invert7->inp0(nMOD1);
+        invert7->outp0(MOD);
+
+        invert8 = new invert("inv_MOD");
+        invert8->inp0(MOD);
+        invert8->outp0(nMODB);
+
+        delayProms0 = new delayProms("delayProms0");
+        delayProms0->ce0(nMODB);
+        delayProms0->ce1(MOD);
+        delayProms0->inp0(TCB3_7);
+        delayProms0->inp1(MC6_12);
+        delayProms0->inp2(TCB2_7);
+        delayProms0->inp3(preDelay1);
+        delayProms0->inp4(program1);
+        delayProms0->outp0(delayData0);
+        delayProms0->outp1(delayData1);
 /*
         flipFlop0 = new flipFlop("LS374_0");
         flipFlop0->clk(clk_sig);
@@ -297,13 +319,7 @@ SC_MODULE(SYSTEM)
         count0->outp3(TCB7A);
         count0->outp4(nTCB7);
         
-        delayProms0 = new delayProms("delayProms0");
-        delayProms0->chipEnable(nMOD);
-        delayProms0->address0(TCB2_7);
-        delayProms0->address1(MC5_12);
-        delayProms0->address2(preDelay1);
-        delayProms0->address3(program1);
-        delayProms0->outp0(delayData0);
+        
 
         byteReg0 = new byteReg("byteReg0");
         byteReg0->clk(nTCB1);
@@ -442,8 +458,10 @@ SC_MODULE(SYSTEM)
         delete octalFlipFlop0, octalFlipFlop1;
         delete invert0,invert1,invert2,invert3;
         delete invert4,invert5,invert6,invert7;
+        delete invert8;
         delete flipFlop0,flipFlop1,flipFlop2;
         delete modRateCountProm0;
+        delete delayProms0;
         /*
         delete count0;
         delete split0;
@@ -453,7 +471,7 @@ SC_MODULE(SYSTEM)
         delete flipFlop1;
         delete modCount0;
         
-        delete delayProms0;
+        
         delete writeAddrCount0;
         delete byteReg0;
         delete byteInvertMux0;

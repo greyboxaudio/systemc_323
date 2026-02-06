@@ -12,5 +12,4 @@ void timer3::timer3_main(void)
     }
     outp0.write(tim3_val & 0x1ff);
     outp1.write(tim3_val >> 6);
-    outp2.write(tim3_val >> 5);
 }

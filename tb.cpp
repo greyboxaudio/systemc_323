@@ -68,8 +68,8 @@ void tb::sink()
         bool TCB7 = outp38.read();
         bool debug0 = outp39.read();
 
-        cout << TC0_7.to_int() << " " << TCB2_7.to_int() << " " << RAS << " " << CAS << " " << nMOD << endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
-        if (TC0_7 > 80)
+        cout << TC0_7.to_int() << " " << TCB2_7.to_int() << " " << delayData0.to_int() << " " <<delayData1.to_int() << " " <<  RAS << " " << CAS << " " << nMOD << endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
+        if (TC0_7 > 130)
         {
             sc_stop(); // end simulation
         }

@@ -12,7 +12,8 @@ void timer1::timer1_main(void)
         tim1_val = 0;
     }
     outp0.write(tim1_val);
-    outp1.write(tim1_val[1]);
-    outp5.write(tim1_val[5]);
+    outp1.write(tim1_val >> 1);
+    outp2.write(tim1_val[0]);
+    outp3.write(tim1_val[5]);
     clr_flag_1 = clr.read();
 }
