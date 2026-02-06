@@ -2,8 +2,7 @@
 #include "eproms.h"
 void modRateCountProm::func(void)
 {
-    sc_uint<8> promAddress = address0.read() + (address1.read() << 4);
-    sc_uint<8> promData = d0803_626[promAddress];
-    //sc_uint<8> promData = d0803[promAddress];
-    outp0.write(promData & 0xf);
+    sc_uint<8> address = inp0.read() + (inp1.read() << 4);
+    sc_uint<8> data = d0803_626[address] & 0xf;
+    outp0.write(data);
 }
