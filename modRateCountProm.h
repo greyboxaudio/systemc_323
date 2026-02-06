@@ -3,7 +3,6 @@ SC_MODULE(modRateCountProm)
 {
     sc_in<sc_uint<8>> address0, address1;
     sc_out<sc_uint<8>> outp0;
-    sc_out<bool> outp1, outp2;
 
     void func();
 

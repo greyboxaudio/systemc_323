@@ -1,17 +1,20 @@
 #include <systemc.h>
 #include "tb.h"
 #include "timer0.h"
+#include "timer1.h"
 #include "timingProms.h"
 #include "octalFlipFlop.h"
 #include "dacSlotAddrCount.h"
 #include "controlLogic.h"
-/*
-#include "byteSplitter.h"
+#include "invert.h"
+#include "flipFlop.h"
 #include "modRateCountProm.h"
 #include "modRateCount.h"
+/*
+#include "byteSplitter.h"
+
 #include "bitFlipFlop.h"
 #include "modCount.h"
-#include "bitInvert.h"
 #include "delayProms.h"
 #include "writeAddrCount.h"
 #include "byteReg.h"
@@ -33,22 +36,25 @@ SC_MODULE(SYSTEM)
     tb *tb0;
     controlLogic *controlLogic0;
     timer0 *tim0;
+    timer1 *tim1;
     timingProms *timingProms0;
-    octalFlipFlop *octalFlipFlop0;
-    octalFlipFlop *octalFlipFlop1;
+    octalFlipFlop *octalFlipFlop0,*octalFlipFlop1;
+    invert *invert0,*invert1,*invert2,*invert3,*invert4,*invert5;
+    flipFlop *flipFlop0,*flipFlop1;
+    modRateCountProm *modRateCountProm0;
+    modRateCount *modRateCount0;
     /*
     byteSplitter *split0;
     byteSplitter *split1;
     dacSlotAddrCount *count0;
-    modRateCountProm *modRateCountProm0;
-    modRateCount *modRateCount0;
-    bitFlipFlop *bitFlipFlop0;
-    bitFlipFlop *bitFlipFlop1;
-    bitFlipFlop *bitFlipFlop2;
+    
+    
+    flipFlop *flipFlop1;
+    flipFlop *flipFlop2;
     modCount *modCount0;
-    bitInvert *bitInvert0;
-    bitInvert *bitInvert1;
-    bitInvert *bitInvert2;
+    invert *invert0;
+    invert *invert1;
+    invert *invert2;
     delayProms *delayProms0;
     writeAddrCount *writeAddrCount0;
     byteReg *byteReg0;
@@ -77,7 +83,7 @@ SC_MODULE(SYSTEM)
     sc_signal<bool> nDACX0, ISH0, nER0, nEL0, nEF0, nET0, MSBE0, LSBE0;
     sc_signal<bool> nSyncClear1, DAC1, DACEN1, RAS1, CAS1, SARCK1, nS1, nMOD1;
     sc_signal<bool> nDACX1, ISH1, nER1, nEL1, nEF1, nET1, MSBE1, LSBE1;
-    sc_signal<bool> nDAC, nTCB1, nDDTCB1, TCB1, TCB2, TCB7, nTCB7, TCB7A;
+    sc_signal<bool> nDAC, TC1, nTC1, nTCB1, DTCB1, nDDTCB1, TCB1, TCB2, TCB7, nTCB7, TCB7A;
     sc_signal<bool> SNMODEN, MODDIS;
     sc_signal<bool> carry, MCCK;
     sc_signal<sc_uint<16>> MC0_12;
@@ -89,8 +95,8 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> address0, address1;
     sc_signal<sc_uint<16>> address2;
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData, gain;
-    sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, bitFlipFlop2outp, nSelectA, compOutp0;
-    sc_signal<bool> debug0;
+    sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, flipFlop2outp, nSelectA, compOutp0;
+    sc_signal<bool> debug0, nc0, nc1, nc2, nc3,nc4,nc5; //not connected
 
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
@@ -100,6 +106,8 @@ SC_MODULE(SYSTEM)
         preDelay0 = 9;
         decaytime0 = 16;
         ratlvl = 0;
+        pullHigh = 1;
+        pullLow = 0;
 
         tb0 = new tb("tb0"); //"new" operator allocates memory space for module
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
@@ -144,11 +152,25 @@ SC_MODULE(SYSTEM)
         controlLogic0->predelayOutp(preDelay1);
         controlLogic0->decaytimeOutp(decaytime1);
 
-        tim0 = new timer0("LS163");
+        tim0 = new timer0("LS163_0");
         tim0->clk(clk_sig);
+        tim0->clr(pullHigh);
         tim0->outp0(TC0_7);
+        tim0->outp1(TC1);
+        tim0->outp5(nc0);
 
-        timingProms0 = new timingProms("28L22");
+        invert0 = new invert("inv_0");
+        invert0->inp0(TC1);
+        invert0->outp0(nTC1);
+
+        flipFlop0 = new flipFlop("LS374_2");
+        flipFlop0->clk(clk_sig);
+        flipFlop0->clr(pullHigh);
+        flipFlop0->inp0(nTC1);
+        flipFlop0->outp0(nTCB1);
+        flipFlop0->outp1(nc1);
+
+        timingProms0 = new timingProms("28L22_0");
         timingProms0->inp0(TC0_7);
         timingProms0->outp0(nSyncClear0);
         timingProms0->outp1(DAC0);
@@ -204,10 +226,33 @@ SC_MODULE(SYSTEM)
         octalFlipFlop1->outp5(nET1);
         octalFlipFlop1->outp6(MSBE1);
         octalFlipFlop1->outp7(LSBE1);
+
+        invert1 = new invert("inv_1");
+        invert1->inp0(DAC1);
+        invert1->outp0(nDAC);
+
+        invert2 = new invert("inv_2");
+        invert2->inp0(nTCB1);
+        invert2->outp0(DTCB1);
+
+        invert3 = new invert("inv_3");
+        invert3->inp0(DTCB1);
+        invert3->outp0(nDDTCB1);
+
+        tim1 = new timer1("LS163_1");
+        tim1->clk(nDDTCB1);
+        tim1->clr(nSyncClear1);
+        tim1->outp0(TCB2_7);
+        tim1->outp1(nc2);
+        tim1->outp5(TCB7);
+
+        invert4 = new invert("inv_4");
+        invert4->inp0(DTCB1);
+        invert4->outp0(nDDTCB1);
 /*
-        bitFlipFlop0 = new bitFlipFlop("LS374_0");
-        bitFlipFlop0->clk(clk_sig);
-        bitFlipFlop0->inp0(rom0_outp_sig);
+        flipFlop0 = new flipFlop("LS374_0");
+        flipFlop0->clk(clk_sig);
+        flipFlop0->inp0(rom0_outp_sig);
 
         count0 = new dacSlotAddrCount("count0");
         count0->clk(nDDTCB1);
@@ -249,11 +294,11 @@ SC_MODULE(SYSTEM)
         byteFullAdder0->outp0(address0);
         byteFullAdder0->cOut(c4);
 
-        bitFlipFlop1 = new bitFlipFlop("bitFlipFlop1");
-        bitFlipFlop1->clk(nTCB1);
-        bitFlipFlop1->clr(RAS);
-        bitFlipFlop1->inp0(c4);
-        bitFlipFlop1->outp0(c0);
+        flipFlop1 = new flipFlop("flipFlop1");
+        flipFlop1->clk(nTCB1);
+        flipFlop1->clr(RAS);
+        flipFlop1->inp0(c4);
+        flipFlop1->outp0(c0);
 
         addressMangle0 = new addressMangle("addressMangle0");
         addressMangle0->inp0(address0);
@@ -272,11 +317,11 @@ SC_MODULE(SYSTEM)
         modRateCount0->outp0(carry);
 
         //modCountClk
-        bitFlipFlop0 = new bitFlipFlop("bitFlipFlop0");
-        bitFlipFlop0->clk(nTCB7);
-        bitFlipFlop0->clr(pullHigh);
-        bitFlipFlop0->inp0(carry);
-        bitFlipFlop0->outp0(MCCK);
+        flipFlop0 = new flipFlop("flipFlop0");
+        flipFlop0->clk(nTCB7);
+        flipFlop0->clr(pullHigh);
+        flipFlop0->inp0(carry);
+        flipFlop0->outp0(MCCK);
 
         dram0 = new dram("dram0");
         dram0->ras(RAS);
@@ -334,15 +379,15 @@ SC_MODULE(SYSTEM)
         bitNAND0->inp1(nTCB1);
         bitNAND0->outp0(TCB1);
 
-        bitFlipFlop2 = new bitFlipFlop("bitFlipFlop2");
-        bitFlipFlop2->clk(TCB1);
-        bitFlipFlop2->clr(pullHigh);
-        bitFlipFlop2->inp0(TCB2);
-        bitFlipFlop2->outp0(bitFlipFlop2outp);
+        flipFlop2 = new flipFlop("flipFlop2");
+        flipFlop2->clk(TCB1);
+        flipFlop2->clr(pullHigh);
+        flipFlop2->inp0(TCB2);
+        flipFlop2->outp0(flipFlop2outp);
 
         bitNAND1 = new bitNAND("bitNAND1");
         bitNAND1->inp0(nTCB1);
-        bitNAND1->inp1(bitFlipFlop2outp);
+        bitNAND1->inp1(flipFlop2outp);
         bitNAND1->outp0(nGainLatch);
 
         latchedMux0 = new latchedMux("latchedMux0");
@@ -362,18 +407,25 @@ SC_MODULE(SYSTEM)
         delete controlLogic0;
         delete octalFlipFlop0;
         delete octalFlipFlop1;
+        delete invert0;
+        delete invert1;
+        delete invert2;
+        delete invert3;
+        delete invert4;
+        delete invert5;
+        delete flipFlop0;
+        delete flipFlop1;
+        delete modRateCountProm0;
+        delete modRateCount0;
         /*
         delete count0;
         delete split0;
         delete split1;
-        delete modRateCountProm0;
-        delete modRateCount0;
-        delete bitFlipFlop0;
-        delete bitFlipFlop1;
+        
+        
+        delete flipFlop1;
         delete modCount0;
-        delete bitInvert0;
-        delete bitInvert1;
-        delete bitInvert2;
+        
         delete delayProms0;
         delete writeAddrCount0;
         delete byteReg0;

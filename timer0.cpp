@@ -3,12 +3,16 @@
 // scoping module::thread; fir_main is within the scope of module fir
 //(void) as argument to show explicitely that fir_main has no arguments
 sc_uint<8> tim0_val;
+bool clr_flag_0;
 void timer0::timer0_main(void)
 {
-    outp0.write(tim0_val);
     tim0_val += 1;
-    if (tim0_val > 255)
+    if (tim0_val > 255 || clr_flag_0 == 0)
     {
         tim0_val = 0;
     }
+    outp0.write(tim0_val);
+    outp1.write(tim0_val[1]);
+    outp5.write(tim0_val[5]);
+    clr_flag_0 = clr.read();
 }

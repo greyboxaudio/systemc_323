@@ -18,6 +18,6 @@ SC_MODULE(tb)
     {
         //SC_CTHREAD(source, clk.pos());
         SC_METHOD(sink);
-        sensitive << outp0;
+        sensitive << outp0, outp1;
     }
 };
