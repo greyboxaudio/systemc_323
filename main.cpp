@@ -12,6 +12,7 @@
 #include "flipFlop.h"
 #include "modRateCountProm.h"
 #include "delayProms.h"
+#include "byteReg.h"
 /*
 #include "byteSplitter.h"
 
@@ -19,7 +20,7 @@
 #include "modCount.h"
 
 #include "writeAddrCount.h"
-#include "byteReg.h"
+
 #include "byteInvertMux.h"
 #include "byteFullAdder.h"
 #include "addressMangle.h"
@@ -48,6 +49,7 @@ SC_MODULE(SYSTEM)
     flipFlop *flipFlop0,*flipFlop1,*flipFlop2;
     modRateCountProm *modRateCountProm0;
     delayProms *delayProms0;
+    byteReg *byteReg0;
     /*
     byteSplitter *split0;
     byteSplitter *split1;
@@ -62,7 +64,7 @@ SC_MODULE(SYSTEM)
     invert *invert2;
     
     writeAddrCount *writeAddrCount0;
-    byteReg *byteReg0;
+    
     byteInvertMux *byteInvertMux0;
     byteFullAdder *byteFullAdder0;
     addressMangle *addressMangle0;
@@ -304,6 +306,11 @@ SC_MODULE(SYSTEM)
         delayProms0->inp3(preDelay1);
         delayProms0->inp4(program1);
         delayProms0->outp0(delayData0);
+
+        byteReg0 = new byteReg("delayDataReg");
+        byteReg0->clk(nTCB1);
+        byteReg0->inp0(delayData0);
+        byteReg0->outp0(delayData1);
 /*
         flipFlop0 = new flipFlop("LS374_0");
         flipFlop0->clk(clk_sig);
@@ -320,10 +327,7 @@ SC_MODULE(SYSTEM)
         
         
 
-        byteReg0 = new byteReg("byteReg0");
-        byteReg0->clk(nTCB1);
-        byteReg0->inp0(delayData0);
-        byteReg0->outp0(delayData1);
+        
 
         writeAddrCount0 = new writeAddrCount("writeAddrCount0");
         writeAddrCount0->clk(TCB7A);
@@ -461,6 +465,7 @@ SC_MODULE(SYSTEM)
         delete flipFlop0,flipFlop1,flipFlop2;
         delete modRateCountProm0;
         delete delayProms0;
+        delete byteReg0;
         /*
         delete count0;
         delete split0;
@@ -472,7 +477,7 @@ SC_MODULE(SYSTEM)
         
         
         delete writeAddrCount0;
-        delete byteReg0;
+        
         delete byteInvertMux0;
         delete byteFullAdder0;
         delete addressMangle0;
