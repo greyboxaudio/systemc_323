@@ -3,13 +3,19 @@
 
 void delayProms::dlyData(void)
 {
-    sc_uint<16> address = inp2.read() + ((inp3.read() & 0x07) << 6) + ((inp4.read() & 0x07) << 9) + ((inp3.read() & 0x08) << 12) + ((inp4.read() & 0x08) << 13);
-    sc_uint<8> data = d0808_626[address];
+    sc_uint<16> address;
+    sc_uint<8> data;
+    bool enable0 = ce0.read();
+    bool enable1 = ce1.read();
+    if (!enable1)
+    {
+        address = inp0.read() + (inp1.read() << 5);
+        data = d0807[address];
+    }
+    if (!enable0)
+    {
+        address = inp2.read() + ((inp3.read() & 0x07) << 6) + ((inp4.read() & 0x07) << 9) + ((inp3.read() & 0x08) << 12) + ((inp4.read() & 0x08) << 13);
+        data = d0808_626[address];
+    }
     outp0.write(data);
-}
-void delayProms::modData(void)
-{
-    sc_uint<16> address = inp0.read() + (inp1.read() << 5);
-    sc_uint<8> data = d0807[address];
-    outp1.write(data);
 }

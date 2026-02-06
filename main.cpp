@@ -304,7 +304,6 @@ SC_MODULE(SYSTEM)
         delayProms0->inp3(preDelay1);
         delayProms0->inp4(program1);
         delayProms0->outp0(delayData0);
-        delayProms0->outp1(delayData1);
 /*
         flipFlop0 = new flipFlop("LS374_0");
         flipFlop0->clk(clk_sig);
