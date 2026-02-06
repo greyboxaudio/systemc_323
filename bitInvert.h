@@ -4,7 +4,6 @@ SC_MODULE(bitInvert)
     sc_in<bool> inp0;
     sc_out<bool> outp0;
 
-    bool value{};
     void bitInvert_main()
     {
         outp0.write(!inp0.read());

@@ -1,8 +1,11 @@
 #include <systemc.h>
 #include "tb.h"
 #include "timer0.h"
-#include "dacSlotAddrCount.h"
 #include "timingProms.h"
+#include "octalFlipFlop.h"
+#include "dacSlotAddrCount.h"
+#include "controlLogic.h"
+/*
 #include "byteSplitter.h"
 #include "modRateCountProm.h"
 #include "modRateCount.h"
@@ -21,15 +24,19 @@
 #include "bitNAND.h"
 #include "comparator.h"
 #include "latchedMux.h"
-#include "controlLogic.h"
 #include "dram.h"
+*/
 
 SC_MODULE(SYSTEM)
 {
-    //modules
+    // modules
     tb *tb0;
+    controlLogic *controlLogic0;
     timer0 *tim0;
     timingProms *timingProms0;
+    octalFlipFlop *octalFlipFlop0;
+    octalFlipFlop *octalFlipFlop1;
+    /*
     byteSplitter *split0;
     byteSplitter *split1;
     dacSlotAddrCount *count0;
@@ -57,21 +64,24 @@ SC_MODULE(SYSTEM)
     bitNAND *bitNAND3;
     comparator *comparator0;
     latchedMux *latchedMux0;
-    controlLogic *controlLogic0;
     dram *dram0;
+    */
+
 
     // declare signals
     sc_clock clk_sig;
     sc_signal<bool> rst_sig;
     sc_signal<sc_uint<8>> program0, decaytime0, preDelay0, program1, preDelay1, decaytime1, ratlvl;
     sc_signal<sc_uint<8>> rom0_outp_sig, rom1_outp_sig, modRateCountData;
-    sc_signal<bool> nSyncClear,DAC, DACEN,RAS, CAS,SARCK,nS,nMOD;
-    sc_signal<bool> nDACX,ISH,nER,nEL,nEF,nET,MSBE,LSBE;
-    sc_signal<bool> nDAC,nTCB1, nDDTCB1, TCB1,TCB2, TCB7, nTCB7, TCB7A;
+    sc_signal<bool> nSyncClear0, DAC0, DACEN0, RAS0, CAS0, SARCK0, nS0, nMOD0;
+    sc_signal<bool> nDACX0, ISH0, nER0, nEL0, nEF0, nET0, MSBE0, LSBE0;
+    sc_signal<bool> nSyncClear1, DAC1, DACEN1, RAS1, CAS1, SARCK1, nS1, nMOD1;
+    sc_signal<bool> nDACX1, ISH1, nER1, nEL1, nEF1, nET1, MSBE1, LSBE1;
+    sc_signal<bool> nDAC, nTCB1, nDDTCB1, TCB1, TCB2, TCB7, nTCB7, TCB7A;
     sc_signal<bool> SNMODEN, MODDIS;
     sc_signal<bool> carry, MCCK;
     sc_signal<sc_uint<16>> MC0_12;
-    sc_signal<sc_uint<8>> TC0_7, TCB2_7,MC5_12;
+    sc_signal<sc_uint<8>> TC0_7, TCB2_7, MC5_12;
     sc_signal<sc_uint<8>> nROW, nCOLUMN, writeAddrData;
     sc_signal<bool> c0, c4;
     sc_signal<sc_uint<8>> delayData0, delayData1;
@@ -81,7 +91,7 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData, gain;
     sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, bitFlipFlop2outp, nSelectA, compOutp0;
     sc_signal<bool> debug0;
-    
+
     SC_CTOR(SYSTEM)
         // use copy constructor to define clock
         : clk_sig("clk_sig", 122, SC_NS) //(character pointer string,period units,actual units)
@@ -90,8 +100,6 @@ SC_MODULE(SYSTEM)
         preDelay0 = 9;
         decaytime0 = 16;
         ratlvl = 0;
-        pullHigh = 1;
-        pullLow = 0;
 
         tb0 = new tb("tb0"); //"new" operator allocates memory space for module
         tb0->clk(clk_sig);   // take clock port of instance tb0 and connect it to clk_sig; -> is a dereference operator
@@ -107,22 +115,22 @@ SC_MODULE(SYSTEM)
         tb0->outp8(address0);
         tb0->outp9(address1);
         tb0->outp16(address2);
-        tb0->outp20(nSyncClear);
-        tb0->outp21(DAC);
-        tb0->outp22(DACEN);
-        tb0->outp23(CAS);
-        tb0->outp24(RAS);
-        tb0->outp25(SARCK);
-        tb0->outp26(nS);
-        tb0->outp27(nMOD);
-        tb0->outp28(nDACX);
-        tb0->outp29(ISH);
-        tb0->outp30(nER);
-        tb0->outp31(nEL);
-        tb0->outp32(nEF);
-        tb0->outp33(nET);
-        tb0->outp34(MSBE);
-        tb0->outp35(LSBE);
+        tb0->outp20(nSyncClear1);
+        tb0->outp21(DAC1);
+        tb0->outp22(DACEN1);
+        tb0->outp23(CAS1);
+        tb0->outp24(RAS1);
+        tb0->outp25(SARCK1);
+        tb0->outp26(nS1);
+        tb0->outp27(nMOD1);
+        tb0->outp28(nDACX1);
+        tb0->outp29(ISH1);
+        tb0->outp30(nER1);
+        tb0->outp31(nEL1);
+        tb0->outp32(nEF1);
+        tb0->outp33(nET1);
+        tb0->outp34(MSBE1);
+        tb0->outp35(LSBE1);
         tb0->outp36(nDAC);
         tb0->outp37(nTCB1);
         tb0->outp38(TCB7);
@@ -136,34 +144,70 @@ SC_MODULE(SYSTEM)
         controlLogic0->predelayOutp(preDelay1);
         controlLogic0->decaytimeOutp(decaytime1);
 
-        tim0 = new timer0("tim0");
+        tim0 = new timer0("LS163");
         tim0->clk(clk_sig);
-        tim0->rst(rst_sig);
         tim0->outp0(TC0_7);
 
-        timingProms0 = new timingProms("rom0");
-        timingProms0->clk(clk_sig);
-        timingProms0->rst(rst_sig);        
+        timingProms0 = new timingProms("28L22");
         timingProms0->inp0(TC0_7);
-        timingProms0->outp0(nSyncClear);
-        timingProms0->outp1(DAC);
-        timingProms0->outp2(DACEN);
-        timingProms0->outp3(CAS);
-        timingProms0->outp4(RAS);
-        timingProms0->outp5(SARCK);
-        timingProms0->outp6(nS);
-        timingProms0->outp7(nMOD);
-        timingProms0->outp8(nDACX);
-        timingProms0->outp9(ISH);
-        timingProms0->outp10(nER);
-        timingProms0->outp11(nEL);
-        timingProms0->outp12(nEF);
-        timingProms0->outp13(nET);
-        timingProms0->outp14(MSBE);
-        timingProms0->outp15(LSBE);
-        timingProms0->outp16(nDAC);
-        timingProms0->outp17(nTCB1);
-        timingProms0->outp18(nDDTCB1);
+        timingProms0->outp0(nSyncClear0);
+        timingProms0->outp1(DAC0);
+        timingProms0->outp2(DACEN0);
+        timingProms0->outp3(CAS0);
+        timingProms0->outp4(RAS0);
+        timingProms0->outp5(SARCK0);
+        timingProms0->outp6(nS0);
+        timingProms0->outp7(nMOD0);
+        timingProms0->outp8(nDACX0);
+        timingProms0->outp9(ISH0);
+        timingProms0->outp10(nER0);
+        timingProms0->outp11(nEL0);
+        timingProms0->outp12(nEF0);
+        timingProms0->outp13(nET0);
+        timingProms0->outp14(MSBE0);
+        timingProms0->outp15(LSBE0);
+
+        octalFlipFlop0 = new octalFlipFlop("LS374_0");
+        octalFlipFlop0->clk(clk_sig);
+        octalFlipFlop0->inp0(nSyncClear0);
+        octalFlipFlop0->inp1(DAC0);
+        octalFlipFlop0->inp2(DACEN0);
+        octalFlipFlop0->inp3(CAS0);
+        octalFlipFlop0->inp4(RAS0);
+        octalFlipFlop0->inp5(SARCK0);
+        octalFlipFlop0->inp6(nS0);
+        octalFlipFlop0->inp7(nMOD0);
+        octalFlipFlop0->outp0(nSyncClear1);
+        octalFlipFlop0->outp1(DAC1);
+        octalFlipFlop0->outp2(DACEN1);
+        octalFlipFlop0->outp3(CAS1);
+        octalFlipFlop0->outp4(RAS1);
+        octalFlipFlop0->outp5(SARCK1);
+        octalFlipFlop0->outp6(nS1);
+        octalFlipFlop0->outp7(nMOD1);
+
+        octalFlipFlop1 = new octalFlipFlop("LS374_1");
+        octalFlipFlop1->clk(clk_sig);
+        octalFlipFlop1->inp0(nDACX0);
+        octalFlipFlop1->inp1(ISH0);
+        octalFlipFlop1->inp2(nER0);
+        octalFlipFlop1->inp3(nEL0);
+        octalFlipFlop1->inp4(nEF0);
+        octalFlipFlop1->inp5(nET0);
+        octalFlipFlop1->inp6(MSBE0);
+        octalFlipFlop1->inp7(LSBE0);
+        octalFlipFlop1->outp0(nDACX1);
+        octalFlipFlop1->outp1(ISH1);
+        octalFlipFlop1->outp2(nER1);
+        octalFlipFlop1->outp3(nEL1);
+        octalFlipFlop1->outp4(nEF1);
+        octalFlipFlop1->outp5(nET1);
+        octalFlipFlop1->outp6(MSBE1);
+        octalFlipFlop1->outp7(LSBE1);
+/*
+        bitFlipFlop0 = new bitFlipFlop("LS374_0");
+        bitFlipFlop0->clk(clk_sig);
+        bitFlipFlop0->inp0(rom0_outp_sig);
 
         count0 = new dacSlotAddrCount("count0");
         count0->clk(nDDTCB1);
@@ -173,7 +217,7 @@ SC_MODULE(SYSTEM)
         count0->outp2(TCB2);
         count0->outp3(TCB7A);
         count0->outp4(nTCB7);
-
+        
         delayProms0 = new delayProms("delayProms0");
         delayProms0->chipEnable(nMOD);
         delayProms0->address0(TCB2_7);
@@ -307,16 +351,21 @@ SC_MODULE(SYSTEM)
         latchedMux0->inp0(gainModData);
         latchedMux0->inp1(gainData);
         latchedMux0->outp0(gain);
+        */
     }
     ~SYSTEM() // destructor
     {
         // free up allocated memory space when the simulation ends
         delete tb0;
         delete tim0;
+        delete timingProms0;
+        delete controlLogic0;
+        delete octalFlipFlop0;
+        delete octalFlipFlop1;
+        /*
         delete count0;
         delete split0;
         delete split1;
-        delete timingProms0;
         delete modRateCountProm0;
         delete modRateCount0;
         delete bitFlipFlop0;
@@ -340,8 +389,8 @@ SC_MODULE(SYSTEM)
         delete bitNAND3;
         delete comparator0;
         delete latchedMux0;
-        delete controlLogic0;
         delete dram0;
+        */
     }
 };
 

@@ -10,7 +10,7 @@ SC_MODULE(controlLogic)
         // read input as gray code binary
         sc_uint<8> num = grayCode[programInp.read()-1];
         // xor bit3 with bit4
-        num[3] = num[3] ^ num[4];
+        num[2] = num[2] ^ num[3];
         programOutp.write(num);
     }
     void predelay_func()
@@ -25,7 +25,7 @@ SC_MODULE(controlLogic)
         // read input as gray code binary
         sc_uint<8> num = grayCode[decaytimeInp.read()-1];
         // xor bit3 with bit4
-        num[3] = num[3] ^ num[4];
+        num[2] = num[2] ^ num[3];
         decaytimeOutp.write(num);
     }
 

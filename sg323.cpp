@@ -35,11 +35,11 @@ void sg323::func(void)
         outp0.write(dramAddress);
         outp1.write(address0);
         // " | " << .to_int() <<
-        cout << timer0.to_int() << " | pg " << program.to_int() <<" | pd " << predly.to_int() <<" | dc " << decay.to_int() << " | TCB2_7 " << TCB2_7.to_int() <<" | TCB2 " << TCB2 <<" | TCB7 " << TCB7A <<" | addr0 " << address0.to_int() <<" | addr1 " << address1.to_int() << " | RAS " << RAS << " | row " << rowAddress.to_int() <<" | CAS " << CAS <<" | col " << colAddress.to_int() <<" | dram " << dramAddress.to_int() << endl;
+        cout << timer0.to_int() << " | pg " << program.to_int() <<" | pd " << predly.to_int() <<" | dc " << decay.to_int() << " | TCB2_7 " << TCB2_7.to_int() <<" | TCB2 " << TCB2 <<" | TCB7 " << TCB7A <<" | dlyaddr " << dlyAddress.to_int() <<" | addr1 " << address1.to_int() << " | RAS " << RAS << " | row " << rowAddress.to_int() <<" | CAS " << CAS <<" | col " << colAddress.to_int() <<" | dram " << dramAddress.to_int() << endl;
 
         //address bit shift
         address1 = address0[6] + ((address0 & 0x3f)<< 1) + (address0[7] << 7);
-        
+
         //dram address
         if (RAS == 1 && RAS_flag == 0)
         {

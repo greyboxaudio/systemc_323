@@ -36,8 +36,6 @@
 void tb::sink()
 {
     // read values on outp port
-    for (int i = 0; i < 80; i++)
-    {
         sc_uint<8> TC0_7 = outp0.read();
         sc_uint<8> TCB2_7 = outp1.read();
         sc_uint<8> MC5_12 = outp2.read();
@@ -48,31 +46,31 @@ void tb::sink()
         sc_uint<8> writeAddr = outp7.read();
         sc_uint<8> addr0 = outp8.read();
         sc_uint<8> addr1 = outp9.read();
-        sc_uint<16> dram_addr = outp16.read(); 
-        bool nSyncClear=outp20.read();
-        bool DAC=outp21.read();
-        bool DACEN=outp22.read();
-        bool CAS=outp23.read();
-        bool RAS=outp24.read();
-        bool SARCK=outp25.read();
-        bool nS=outp26.read();
-        bool nMOD=outp27.read();
-        bool nDACX=outp28.read();
-        bool ISH=outp29.read();
-        bool nER=outp30.read();
-        bool nEL=outp31.read();
-        bool nEF=outp32.read();
-        bool nET=outp33.read();
-        bool MSBE=outp34.read();
-        bool LSBE=outp35.read();
-        bool nDAC=outp36.read();
-        bool nTCB1=outp37.read();
-        bool TCB7=outp38.read();
-        bool debug0=outp39.read();
+        sc_uint<16> dram_addr = outp16.read();
+        bool nSyncClear = outp20.read();
+        bool DAC = outp21.read();
+        bool DACEN = outp22.read();
+        bool CAS = outp23.read();
+        bool RAS = outp24.read();
+        bool SARCK = outp25.read();
+        bool nS = outp26.read();
+        bool nMOD = outp27.read();
+        bool nDACX = outp28.read();
+        bool ISH = outp29.read();
+        bool nER = outp30.read();
+        bool nEL = outp31.read();
+        bool nEF = outp32.read();
+        bool nET = outp33.read();
+        bool MSBE = outp34.read();
+        bool LSBE = outp35.read();
+        bool nDAC = outp36.read();
+        bool nTCB1 = outp37.read();
+        bool TCB7 = outp38.read();
+        bool debug0 = outp39.read();
 
-             cout << i << " " << TC0_7.to_int() << " " << TCB2_7.to_int() << " " << MC5_12.to_int() << " " << delayData0.to_int() << " " << nROW.to_int() << " " << nCOL.to_int()<< " " << writeAddr.to_int() << " " << addr1.to_int() << " " << RAS << " "<< CAS << " " << nMOD << " " << debug0 << " " << dram_addr << endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
-
-        wait();
-    }
-    sc_stop(); // end simulation
+        cout << TC0_7.to_int() << " " << TCB2_7.to_int() << " " << MC5_12.to_int() << " " << delayData0.to_int() << " " << nROW.to_int() << " " << nCOL.to_int() << " " << writeAddr.to_int() << " " << addr1.to_int() << " " << RAS << " " << CAS << " " << nMOD << " " << debug0 << " " << dram_addr << endl; // write loop index and value of indata to cout. .to_int() converts systemc data type to regular data type
+        if (TC0_7 > 80)
+        {
+            sc_stop(); // end simulation
+        }
 }
