@@ -3,6 +3,7 @@
 #include "timer0.h"
 #include "timer1.h"
 #include "timer2.h"
+#include "timer3.h"
 #include "timingProms.h"
 #include "octalFlipFlop.h"
 #include "dacSlotAddrCount.h"
@@ -38,6 +39,7 @@ SC_MODULE(SYSTEM)
     timer0 *tim0;
     timer1 *tim1;
     timer2 *tim2;
+    timer3 *tim3;
     timingProms *timingProms0;
     octalFlipFlop *octalFlipFlop0,*octalFlipFlop1;
     invert *invert0,*invert1,*invert2,*invert3,*invert4,*invert5,*invert6,*invert7;
@@ -85,9 +87,9 @@ SC_MODULE(SYSTEM)
     sc_signal<bool> nDACX1, ISH1, nER1, nEL1, nEF1, nET1, MSBE1, LSBE1;
     sc_signal<bool> nDAC, TC1, nTC1, nTCB1, DTCB1, nDDTCB1, TCB1, TCB2, TCB7, nTCB7, TCB7A;
     sc_signal<bool> SNMODEN, MODDIS;
-    sc_signal<bool> carry, MCCK;
-    sc_signal<sc_uint<16>> MC0_12;
-    sc_signal<sc_uint<8>> TC0_7, TCB2_7, MC5_12;
+    sc_signal<bool> MCCK, nMCCK;
+    sc_signal<sc_uint<16>> MC0_8;
+    sc_signal<sc_uint<8>> TC0_7, TCB2_7, MC5_12, MC6_12;
     sc_signal<sc_uint<8>> nROW, nCOLUMN, writeAddrData;
     sc_signal<bool> modCarry, nModCarry;
     sc_signal<sc_uint<8>> delayData0, delayData1;
@@ -271,6 +273,16 @@ SC_MODULE(SYSTEM)
         flipFlop2->inp0(modCarry);
         flipFlop2->outp0(MCCK);
         flipFlop2->outp1(nc3);
+
+        invert6 = new invert("inv_MCCK");
+        invert6->inp0(MCCK);
+        invert6->outp0(nMCCK);
+
+        tim3 = new timer3("modCounter");
+        tim3->clk(nMCCK);
+        tim3->outp0(MC0_8);
+        tim3->outp1(MC6_12);
+        tim3->outp2(MC5_12);
 /*
         flipFlop0 = new flipFlop("LS374_0");
         flipFlop0->clk(clk_sig);
@@ -424,7 +436,7 @@ SC_MODULE(SYSTEM)
     {
         // free up allocated memory space when the simulation ends
         delete tb0;
-        delete tim0, tim1, tim2;
+        delete tim0, tim1, tim2, tim3;
         delete timingProms0;
         delete controlLogic0;
         delete octalFlipFlop0, octalFlipFlop1;
