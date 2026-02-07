@@ -5,6 +5,8 @@ SC_MODULE(timer2)
     sc_in<sc_uint<8>> inp0;
     sc_out<bool> outp0;
     // keep the module down to declaring ports, threads and constructors and leave all the behavioural functionality to other files
+    sc_uint<8> tim2_val;
+    bool ld_flag_2;
     void timer2_main();
 
     SC_CTOR(timer2)

@@ -2,8 +2,7 @@
 // FIR Main thread
 // scoping module::thread; fir_main is within the scope of module fir
 //(void) as argument to show explicitely that fir_main has no arguments
-sc_uint<8> tim1_val;
-bool clr_flag_1;
+
 void timer1::timer1_main(void)
 {
     tim1_val += 1;

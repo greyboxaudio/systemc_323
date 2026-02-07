@@ -277,13 +277,31 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
 
     sc_trace_file *file = sc_create_vcd_trace_file("trace");
     sc_trace(file, clk_sig, "sysclk");
-    sc_trace(file, nMOD1, "nMOD");
-    sc_trace(file, DACEN1, "DACEN");
-    sc_trace(file, RAS1, "RAS");
-    sc_trace(file, CAS1, "CAS");
-    sc_trace(file, TCB7, "TCB7");
     sc_trace(file, nTCB1, "nTCB1");
     sc_trace(file, TCB2, "TCB2");
+    sc_trace(file, TCB7, "TCB7");
+    sc_trace(file, nS1, "nS");
+    sc_trace(file, SARCK1, "SARCK");
+    sc_trace(file, RAS1, "RAS");
+    sc_trace(file, CAS1, "CAS");
+    sc_trace(file, DACEN1, "DACEN");
+    sc_trace(file, LSBE1, "LSBE");
+    sc_trace(file, MSBE1, "MSBE");
+    sc_trace(file, DAC1, "DAC");
+    sc_trace(file, nMOD1, "nMOD");
+    sc_trace(file, nSyncClear1, "nSYNCCLEAR");
+    sc_trace(file, nDACX1, "nDACX");
+    sc_trace(file, delayData0, "delayData0");
+    sc_trace(file, delayData1, "delayData1");
+    sc_trace(file, nROW, "nROW");
+    sc_trace(file, nCOLUMN, "nCOLUMN");
+    sc_trace(file, writeAddrData, "writeAddressData");
+    sc_trace(file, address0, "address0");
+    sc_trace(file, address1, "address1");
+    sc_trace(file, rowCarryIn, "rowCarryIn");
+    sc_trace(file, rowCarryOut, "rowCarryOut");
+    //sc_trace(file, , "");
+    
     sc_start(100, SC_US); // start simulation
     sc_close_vcd_trace_file(file);
 
