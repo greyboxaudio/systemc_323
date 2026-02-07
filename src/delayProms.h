@@ -6,6 +6,7 @@ SC_MODULE(delayProms)
     sc_in<sc_uint<4>> inp3, inp4;
     sc_out<sc_uint<8>> outp0; //delayData
 
+    void start_of_simulation( void ) override;
     void dlyData();
 
     SC_CTOR(delayProms)

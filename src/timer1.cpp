@@ -1,8 +1,12 @@
 #include "timer1.h"
-// FIR Main thread
-// scoping module::thread; fir_main is within the scope of module fir
-//(void) as argument to show explicitely that fir_main has no arguments
-
+void timer1::start_of_simulation( void )
+{
+    sc_uint<8> value = 0;
+    outp0.write(value);
+    outp1.write(value);
+    outp2.write(value[0]);
+    outp3.write(value[0]);
+}
 void timer1::timer1_main(void)
 {
     tim1_val += 1;

@@ -4,6 +4,7 @@ SC_MODULE(invert)
     sc_in<bool> inp0;
     sc_out<bool> outp0;
 
+    void start_of_simulation( void ) override;
     void invert_main();
 
     SC_CTOR(invert)

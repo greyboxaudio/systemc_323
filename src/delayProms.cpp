@@ -1,6 +1,9 @@
 #include "delayProms.h"
 #include "eproms.h"
-
+void delayProms::start_of_simulation( void ){
+    sc_uint<8> value = 0;
+    outp0.write(value);
+}
 void delayProms::dlyData(void)
 {
     sc_uint<16> address;

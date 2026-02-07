@@ -7,6 +7,8 @@ SC_MODULE(timer1)
     // keep the module down to declaring ports, threads and constructors and leave all the behavioural functionality to other files
     sc_uint<8> tim1_val;
     bool clr_flag_1;
+
+    void start_of_simulation( void ) override;
     void timer1_main();
 
     SC_CTOR(timer1)
