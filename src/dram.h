@@ -8,13 +8,8 @@ SC_MODULE(dram)
     sc_uint<8> row_addr;
     sc_uint<8> col_addr;
 
-    void row_reg(){
-        row_addr = inp0.read();
-    }
-    void col_reg(){
-        col_addr = inp0.read();
-        outp0.write(row_addr + (col_addr << 8));
-    }
+    void row_reg();
+    void col_reg();
 
     SC_CTOR(dram)
     {

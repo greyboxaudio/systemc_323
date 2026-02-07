@@ -4,10 +4,7 @@ SC_MODULE(addressMangle)
     sc_in<sc_uint<8>> inp0;
     sc_out<sc_uint<8>> outp0;
 
-    void addressMangle_main(){
-        sc_uint<8> data = inp0.read();
-        outp0.write(data[6] + ((data & 0x3f)<< 1) + (data[7] << 7));
-    }
+    void addressMangle_main();
 
     SC_CTOR(addressMangle)
     {

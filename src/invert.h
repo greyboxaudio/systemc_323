@@ -4,11 +4,7 @@ SC_MODULE(invert)
     sc_in<bool> inp0;
     sc_out<bool> outp0;
 
-    void invert_main()
-    {
-        bool a = inp0.read();
-        outp0.write(!a);
-    }
+    void invert_main();
 
     SC_CTOR(invert)
     {

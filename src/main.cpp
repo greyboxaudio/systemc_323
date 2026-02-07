@@ -6,7 +6,6 @@
 #include "timer4.h"
 #include "timingProms.h"
 #include "octalFlipFlop.h"
-#include "dacSlotAddrCount.h"
 #include "controlLogic.h"
 #include "invert.h"
 #include "flipFlop.h"
@@ -17,18 +16,12 @@
 #include "byteFullAdder.h"
 #include "addressMangle.h"
 #include "dram.h"
-/*
-#include "byteSplitter.h"
-#include "bitFlipFlop.h"
-#include "modCount.h"
-#include "writeAddrCount.h"
 #include "gainModCtrlProm.h"
 #include "gainModProm.h"
 #include "gainProm.h"
-#include "bitNAND.h"
+#include "nand.h"
 #include "comparator.h"
 #include "latchedMux.h"
-*/
 
 int sc_main(int argc, char *argv[]) // declare systemc main function as int, so that it can return something.
 {
