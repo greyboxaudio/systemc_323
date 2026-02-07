@@ -10,14 +10,15 @@ SC_MODULE(byteInvertMux)
     {
         sc_uint<8> data_a = inp0.read();
         sc_uint<8> data_b = inp1.read();
+        bool select = sel.read();
 
-        if (sel.read() == 0)
+        if (select)
         {
-            outp0.write(~data_a);
+            outp0.write(~data_b);
         }
         else
         {
-            outp0.write(~data_b);
+            outp0.write(~data_a);
         }
     }
 

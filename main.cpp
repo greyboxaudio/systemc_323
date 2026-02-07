@@ -14,24 +14,21 @@
 #include "modRateCountProm.h"
 #include "delayProms.h"
 #include "byteReg.h"
-/*
-#include "byteSplitter.h"
-
-#include "bitFlipFlop.h"
-#include "modCount.h"
-
-#include "writeAddrCount.h"
-
 #include "byteInvertMux.h"
 #include "byteFullAdder.h"
 #include "addressMangle.h"
+#include "dram.h"
+/*
+#include "byteSplitter.h"
+#include "bitFlipFlop.h"
+#include "modCount.h"
+#include "writeAddrCount.h"
 #include "gainModCtrlProm.h"
 #include "gainModProm.h"
 #include "gainProm.h"
 #include "bitNAND.h"
 #include "comparator.h"
 #include "latchedMux.h"
-#include "dram.h"
 */
 
 SC_MODULE(SYSTEM)
@@ -48,28 +45,25 @@ SC_MODULE(SYSTEM)
     octalFlipFlop *octalFlipFlop0,*octalFlipFlop1;
     invert *invert0,*invert1,*invert2,*invert3,*invert4,*invert5,*invert6,*invert7;
     invert *invert8, *invert9;
-    flipFlop *flipFlop0,*flipFlop1,*flipFlop2;
+    flipFlop *flipFlop0,*flipFlop1,*flipFlop2,*flipFlop3;
     modRateCountProm *modRateCountProm0;
     delayProms *delayProms0;
     byteReg *byteReg0;
+    byteInvertMux *byteInvertMux0;
+    byteFullAdder *byteFullAdder0;
+    addressMangle *addressMangle0;
+    dram *dram0;
     /*
     byteSplitter *split0;
     byteSplitter *split1;
     dacSlotAddrCount *count0;
-    
-    
     flipFlop *flipFlop1;
     flipFlop *flipFlop2;
     modCount *modCount0;
     invert *invert0;
     invert *invert1;
     invert *invert2;
-    
     writeAddrCount *writeAddrCount0;
-    
-    byteInvertMux *byteInvertMux0;
-    byteFullAdder *byteFullAdder0;
-    addressMangle *addressMangle0;
     gainModCtrlProm *gainModCtrlProm0;
     gainModProm *gainModProm0;
     gainProm *gainProm0;
@@ -79,9 +73,7 @@ SC_MODULE(SYSTEM)
     bitNAND *bitNAND3;
     comparator *comparator0;
     latchedMux *latchedMux0;
-    dram *dram0;
     */
-
 
     // declare signals
     sc_clock clk_sig;
@@ -98,7 +90,7 @@ SC_MODULE(SYSTEM)
     sc_signal<sc_uint<16>> MC0_8;
     sc_signal<sc_uint<8>> TC0_7, TCB2_7,TCB3_7, MC6_12;
     sc_signal<sc_uint<8>> nROW, nCOLUMN, writeAddrData;
-    sc_signal<bool> modCarry, nModCarry;
+    sc_signal<bool> modCarry, nModCarry, rowCarryIn, rowCarryOut;
     sc_signal<sc_uint<8>> delayData0, delayData1;
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
@@ -295,6 +287,12 @@ SC_MODULE(SYSTEM)
         invert9->inp0(nTCB7);
         invert9->outp0(TCB7A);
 
+        byteInvertMux0 = new byteInvertMux("rowColumnMux");
+        byteInvertMux0->sel(TCB2);
+        byteInvertMux0->inp0(nROW);
+        byteInvertMux0->inp1(nCOLUMN);
+        byteInvertMux0->outp0(writeAddrData);
+
         tim4 = new timer4("writeAddrCounter");
         tim4->clk(TCB7A);
         tim4->outp0(nROW);
@@ -322,52 +320,25 @@ SC_MODULE(SYSTEM)
         byteReg0->clk(nTCB1);
         byteReg0->inp0(delayData0);
         byteReg0->outp0(delayData1);
-/*
-        flipFlop0 = new flipFlop("LS374_0");
-        flipFlop0->clk(clk_sig);
-        flipFlop0->inp0(rom0_outp_sig);
 
-        count0 = new dacSlotAddrCount("count0");
-        count0->clk(nDDTCB1);
-        count0->clr(nSyncClear);
-        count0->outp0(TCB2_7);
-        count0->outp1(TCB7);
-        count0->outp2(TCB2);
-        count0->outp3(TCB7A);
-        count0->outp4(nTCB7);
-        
-        
-
-        
-
-        writeAddrCount0 = new writeAddrCount("writeAddrCount0");
-        writeAddrCount0->clk(TCB7A);
-        writeAddrCount0->outp0(nROW);
-        writeAddrCount0->outp1(nCOLUMN);
-
-        byteInvertMux0 = new byteInvertMux("byteInvertMux0");
-        byteInvertMux0->sel(TCB2);
-        byteInvertMux0->inp0(nROW);
-        byteInvertMux0->inp1(nCOLUMN);
-        byteInvertMux0->outp0(writeAddrData);
-
-        byteFullAdder0 = new byteFullAdder("byteFullAdder0");
+        byteFullAdder0 = new byteFullAdder("delayAdder");
         byteFullAdder0->inp0(writeAddrData);
         byteFullAdder0->inp1(delayData1);
-        byteFullAdder0->cIn(c0);
+        byteFullAdder0->c0(rowCarryIn);
         byteFullAdder0->outp0(address0);
-        byteFullAdder0->cOut(c4);
+        byteFullAdder0->c4(rowCarryOut);
 
-        flipFlop1 = new flipFlop("flipFlop1");
-        flipFlop1->clk(nTCB1);
-        flipFlop1->clr(RAS);
-        flipFlop1->inp0(c4);
-        flipFlop1->outp0(c0);
+        flipFlop3 = new flipFlop("rowCarryOutLatch");
+        flipFlop3->clk(nTCB1);
+        flipFlop3->clr(RAS1);
+        flipFlop3->inp0(rowCarryOut);
+        flipFlop3->outp0(rowCarryIn);
+        flipFlop3->outp1(nc4);
 
         addressMangle0 = new addressMangle("addressMangle0");
         addressMangle0->inp0(address0);
         addressMangle0->outp0(address1);
-
+/*
         modRateCountProm0 = new modRateCountProm("modRateCountProm0");
         modRateCountProm0->address0(ratlvl);
         modRateCountProm0->address1(program1);
@@ -473,25 +444,21 @@ SC_MODULE(SYSTEM)
         delete invert0,invert1,invert2,invert3;
         delete invert4,invert5,invert6,invert7;
         delete invert8,invert9;
-        delete flipFlop0,flipFlop1,flipFlop2;
+        delete flipFlop0,flipFlop1,flipFlop2,flipFlop3;
         delete modRateCountProm0;
         delete delayProms0;
         delete byteReg0;
+        delete byteInvertMux0;
+        delete byteFullAdder0;
+        delete addressMangle0;
+        delete dram0;
         /*
         delete count0;
         delete split0;
         delete split1;
-        
-        
         delete flipFlop1;
         delete modCount0;
-        
-        
         delete writeAddrCount0;
-        
-        delete byteInvertMux0;
-        delete byteFullAdder0;
-        delete addressMangle0;
         delete gainModCtrlProm0;
         delete gainModProm0;
         delete gainProm0;
@@ -501,7 +468,6 @@ SC_MODULE(SYSTEM)
         delete bitNAND3;
         delete comparator0;
         delete latchedMux0;
-        delete dram0;
         */
     }
 };

@@ -1,9 +1,9 @@
 #include <systemc.h>
 SC_MODULE(byteFullAdder)
 {
-    sc_in<bool> cIn;
+    sc_in<bool> c0;
     sc_in<sc_uint<8>> inp0, inp1;
-    sc_out<bool> cOut;
+    sc_out<bool> c4;
     sc_out<sc_uint<8>> outp0;
 
     void func(){
@@ -14,7 +14,7 @@ SC_MODULE(byteFullAdder)
 
         inputA = inp0.read();
         inputB = inp1.read();
-        carry = cIn.read();
+        carry = c0.read();
 
         for  (sc_uint<8> i = 0; i < 8; i++)
         {
@@ -23,12 +23,12 @@ SC_MODULE(byteFullAdder)
         }
         
         outp0.write(output);
-        cOut.write(carry); 
+        c4.write(carry); 
     }
 
     SC_CTOR(byteFullAdder)
     {
         SC_METHOD(func);
-        sensitive << inp0 << inp1 << cIn;
+        sensitive << inp0 << inp1 << c0;
     }
 };
