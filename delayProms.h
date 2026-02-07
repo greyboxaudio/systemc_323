@@ -7,7 +7,6 @@ SC_MODULE(delayProms)
     sc_out<sc_uint<8>> outp0; //delayData
 
     void dlyData();
-    void modData();
 
     SC_CTOR(delayProms)
     {

@@ -4,6 +4,7 @@
 #include "timer1.h"
 #include "timer2.h"
 #include "timer3.h"
+#include "timer4.h"
 #include "timingProms.h"
 #include "octalFlipFlop.h"
 #include "dacSlotAddrCount.h"
@@ -42,10 +43,11 @@ SC_MODULE(SYSTEM)
     timer1 *tim1;
     timer2 *tim2;
     timer3 *tim3;
+    timer4 *tim4;
     timingProms *timingProms0;
     octalFlipFlop *octalFlipFlop0,*octalFlipFlop1;
     invert *invert0,*invert1,*invert2,*invert3,*invert4,*invert5,*invert6,*invert7;
-    invert *invert8;
+    invert *invert8, *invert9;
     flipFlop *flipFlop0,*flipFlop1,*flipFlop2;
     modRateCountProm *modRateCountProm0;
     delayProms *delayProms0;
@@ -289,6 +291,15 @@ SC_MODULE(SYSTEM)
         tim3->outp0(MC0_8);
         tim3->outp1(MC6_12);
 
+        invert9 = new invert("inv_nTCB7");
+        invert9->inp0(nTCB7);
+        invert9->outp0(TCB7A);
+
+        tim4 = new timer4("writeAddrCounter");
+        tim4->clk(TCB7A);
+        tim4->outp0(nROW);
+        tim4->outp1(nCOLUMN);
+
         invert7 = new invert("inv_nMOD");
         invert7->inp0(nMOD1);
         invert7->outp0(MOD);
@@ -455,13 +466,13 @@ SC_MODULE(SYSTEM)
     {
         // free up allocated memory space when the simulation ends
         delete tb0;
-        delete tim0, tim1, tim2, tim3;
+        delete tim0, tim1, tim2, tim3, tim4;
         delete timingProms0;
         delete controlLogic0;
         delete octalFlipFlop0, octalFlipFlop1;
         delete invert0,invert1,invert2,invert3;
         delete invert4,invert5,invert6,invert7;
-        delete invert8;
+        delete invert8,invert9;
         delete flipFlop0,flipFlop1,flipFlop2;
         delete modRateCountProm0;
         delete delayProms0;

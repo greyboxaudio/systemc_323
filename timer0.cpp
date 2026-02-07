@@ -7,7 +7,7 @@ bool clr_flag_0;
 void timer0::timer0_main(void)
 {
     tim0_val += 1;
-    if (tim0_val > 255 || clr_flag_0 == 0)
+    if (tim0_val >= 256 || clr_flag_0 == 0)
     {
         tim0_val = 0;
     }
