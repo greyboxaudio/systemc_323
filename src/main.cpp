@@ -84,10 +84,8 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
 
     tim0 = new timer0("timingCounter");
     tim0->clk(clk_sig);
-    tim0->clr(pullHigh);
     tim0->outp0(TC0_7);
     tim0->outp1(TC1);
-    tim0->outp2(nc0);
 
     invert0 = new invert("inv_0");
     invert0->inp0(TC1);
@@ -276,6 +274,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, nDDTCB1, "nDDTCB1");
     sc_trace(file, TCB2, "TCB2");
     sc_trace(file, TCB7, "TCB7");
+    sc_trace(file, TCB7A, "TCB7A");
     sc_trace(file, nS1, "nS");
     sc_trace(file, SARCK1, "SARCK");
     sc_trace(file, RAS1, "RAS");
