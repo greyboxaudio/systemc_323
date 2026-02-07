@@ -168,11 +168,11 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     invert3->outp0(nDDTCB1);
 
     tim1 = new timer1("dacSlotAddressCounter");
-    tim1->clk(nDDTCB1);
+    tim1->clk(nTCB1);
     tim1->clr(nSyncClear1);
     tim1->outp0(TCB2_7);
     tim1->outp1(TCB3_7);
-    tim1->outp2(TCB2);
+    tim1->outp2(TCB2);  
     tim1->outp3(TCB7);
 
     modRateCountProm0 = new modRateCountProm("modRateCountProm");
@@ -221,7 +221,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     byteInvertMux0->outp0(writeAddrData);
 
     tim4 = new timer4("writeAddrCounter");
-    tim4->clk(TCB7A);
+    tim4->clk(TCB7);
     tim4->outp0(nROW);
     tim4->outp1(nCOLUMN);
 
@@ -266,6 +266,12 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     addressMangle0->inp0(address0);
     addressMangle0->outp0(address1);
 
+    dram0 = new dram("dramArray");
+    dram0->ras(RAS1);
+    dram0->cas(CAS1);
+    dram0->inp0(address1);
+    dram0->outp0(address2);
+
     sc_trace_file *file = sc_create_vcd_trace_file("trace");
     sc_trace(file, clk_sig, "sysclk");
     sc_trace(file, TC0_7, "TC0_7");
@@ -274,6 +280,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, nDDTCB1, "nDDTCB1");
     sc_trace(file, TCB2, "TCB2");
     sc_trace(file, TCB7, "TCB7");
+    sc_trace(file, TCB7, "nTCB7");
     sc_trace(file, TCB7A, "TCB7A");
     sc_trace(file, nS1, "nS");
     sc_trace(file, SARCK1, "SARCK");
@@ -293,6 +300,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, writeAddrData, "writeAddressData");
     sc_trace(file, address0, "address0");
     sc_trace(file, address1, "address1");
+    sc_trace(file, address2, "address2");
     sc_trace(file, rowCarryIn, "rowCarryIn");
     sc_trace(file, rowCarryOut, "rowCarryOut");
     //sc_trace(file, , "");
