@@ -59,20 +59,21 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_signal<bool> nDACX0, ISH0, nER0, nEL0, nEF0, nET0, MSBE0, LSBE0;
     sc_signal<bool> nSyncClear1, DAC1, DACEN1, RAS1, CAS1, SARCK1, nS1, nMOD1;
     sc_signal<bool> nDACX1, ISH1, nER1, nEL1, nEF1, nET1, MSBE1, LSBE1;
-    sc_signal<bool> nDAC, TC1, nTC1, nTCB1, DTCB1, nDDTCB1, TCB1, TCB2, TCB7, nTCB7, TCB7A;
+    sc_signal<bool, SC_MANY_WRITERS> nTCB1, MCCK, gainFlipFlopOut, rowCarryIn;
+    sc_signal<bool> nDAC, TC1, nTC1, DTCB1, nDDTCB1, TCB1, TCB2, TCB7, nTCB7, TCB7A;
     sc_signal<bool> SNMODEN, MODDIS, MOD, nMODB;
-    sc_signal<bool> MCCK, nMCCK;
+    sc_signal<bool> nMCCK;
     sc_signal<sc_uint<16>> MC0_8;
     sc_signal<sc_uint<8>> TC0_7, TCB2_7, TCB3_7, MC6_12;
     sc_signal<sc_uint<8>> nROW, nCOLUMN, writeAddrData;
-    sc_signal<bool> modCarry, nModCarry, rowCarryIn, rowCarryOut;
+    sc_signal<bool> modCarry, nModCarry, rowCarryOut;
     sc_signal<sc_uint<8>> delayData0, delayData1;
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
     sc_signal<sc_uint<16>> address2, dlyaddr0;
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData, gain;
-    sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, gainFlipFlopOut, nSelectA, compOutp;
-    sc_signal<bool> debug0, nc0, nc1, nc2, nc3, nc4, nc5;
+    sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, nSelectA, compOutp;
+    sc_signal<bool, SC_MANY_WRITERS> debug0, nc0, nc1, nc2, nc3, nc4, nc5;
 
     program0 = 15;
     preDelay0 = 8;
@@ -387,6 +388,11 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, gainFlipFlopOut, "gainFlipFlopOut");
     sc_trace(file, TCB1, "TCB1");
     sc_trace(file, nDAC, "nDAC");
+    sc_trace(file, nEF1, "nEF");
+    sc_trace(file, nEL1, "nEL");
+    sc_trace(file, nER1, "nER");
+    sc_trace(file, nET1, "nET");
+    sc_trace(file, ISH1, "nISH");
     //sc_trace(file, , "");
     
     sc_start(100, SC_US); // start simulation

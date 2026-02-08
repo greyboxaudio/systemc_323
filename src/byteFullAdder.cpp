@@ -11,10 +11,10 @@ void byteFullAdder::func(void)
     inputB = inp1.read();
     carry = c0.read();
 
-    for (sc_uint<8> i = 0; i < 8; i++)
+    for (int i = 0; i < 8; i++)
     {
-        sum[i] = (inputA[i] ^ inputB[i]) ^ carry;
-        carry = (inputA[i] & inputB[i]) | (inputA[i] & carry) | (inputB[i] & carry);
+        sum[i] = inputA[i] ^ inputB[i] ^ carry;
+        carry = (inputA[i] & inputB[i]) | (carry & (inputA[i] ^ inputB[i]));
     }
 
     outp0.write(sum);
