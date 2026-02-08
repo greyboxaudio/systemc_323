@@ -215,7 +215,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     invert9->outp0(TCB7A);
 
     tim4 = new timer4("writeAddrCounter");
-    tim4->clk(TCB7A);
+    tim4->clk(TCB7);
     tim4->outp0(nROW);
     tim4->outp1(nCOLUMN);
 
