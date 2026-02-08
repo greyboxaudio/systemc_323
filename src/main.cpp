@@ -377,6 +377,12 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, gainModCtrlData, "gainModCtrlData");
     sc_trace(file, gainModData, "gainModData");
     sc_trace(file, gainData, "gainData");
+    sc_trace(file, nGainLatch, "nGainLatch");
+    sc_trace(file, nSelectA, "nSelectA");
+    sc_trace(file, gain, "gain");
+    sc_trace(file, compOutp, "A<B");
+    sc_trace(file, gainFlipFlopOut, "gainFlipFlopOut");
+    sc_trace(file, TCB1, "TCB1");
     //sc_trace(file, , "");
     
     sc_start(100, SC_US); // start simulation
