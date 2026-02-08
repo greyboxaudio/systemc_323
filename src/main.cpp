@@ -35,7 +35,8 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     octalFlipFlop *octalFlipFlop0, *octalFlipFlop1;
     invert *invert0, *invert1, *invert2, *invert3, *invert4, *invert5, *invert6, *invert7;
     invert *invert8, *invert9;
-    flipFlop *flipFlop0, *flipFlop1, *flipFlop2, *flipFlop3;
+    nand *nand0,*nand1,*nand2,*nand3;
+    flipFlop *flipFlop0, *flipFlop1, *flipFlop2, *flipFlop3, *flipFlop4;
     modRateCountProm *modRateCountProm0;
     delayProms *delayProms0;
     byteReg *byteReg0;
@@ -46,6 +47,8 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     gainModCtrlProm *gainModCtrlProm0;
     gainModProm *gainModProm0;
     gainProm *gainProm0;
+    latchedMux *latchedMux0;
+    comparator *comparator0;
 
     sc_clock clk_sig("clk_sig", 122, SC_NS);
     sc_signal<bool> rst_sig;
@@ -67,7 +70,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_signal<sc_uint<8>> address0, address1;
     sc_signal<sc_uint<16>> address2, dlyaddr0;
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData, gain;
-    sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, flipFlop2outp, nSelectA, compOutp0;
+    sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, gainFlipFlopOut, nSelectA, compOutp;
     sc_signal<bool> debug0, nc0, nc1, nc2, nc3, nc4, nc5;
 
     program0 = 15;
@@ -234,6 +237,45 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     gainProm0->outp0(gainData);
     gainProm0->outp1(nGSN);
 
+    nand0 = new nand("nand0");
+    nand0->inp0(nGainModPromEnable);
+    nand0->inp1(pullHigh);
+    nand0->outp0(gainModPromEnabled);
+
+    nand1 = new nand("nand1");
+    nand1->inp0(gainModPromEnabled);
+    nand1->inp1(compOutp);
+    nand1->outp0(nSelectA);
+
+    nand2 = new nand("nand2");
+    nand2->inp0(nTCB1);
+    nand2->inp1(nTCB1);
+    nand2->outp0(TCB1);
+
+    nand3 = new nand("nand3");
+    nand3->inp0(nTCB1);
+    nand3->inp1(gainFlipFlopOut);
+    nand3->outp0(nGainLatch);
+
+    flipFlop4 = new flipFlop("flipFlop4");
+    flipFlop4->clk(TCB1);
+    flipFlop4->clr(pullHigh);
+    flipFlop4->inp0(TCB2);
+    flipFlop4->outp0(gainFlipFlopOut);
+    flipFlop4->outp1(nc5);
+
+    latchedMux0 = new latchedMux("latchedMux");
+    latchedMux0->clk(nGainLatch);
+    latchedMux0->sel(nSelectA);
+    latchedMux0->inp0(gainModData);
+    latchedMux0->inp1(gainData);
+    latchedMux0->outp0(gain);
+
+    comparator0 = new comparator("gainComparator");
+    comparator0->inp0(gainModData);
+    comparator0->inp1(gainData);
+    comparator0->outp0(compOutp);
+
     invert9 = new invert("inv_nTCB7");
     invert9->inp0(nTCB7);
     invert9->outp0(TCB7A);
@@ -347,6 +389,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     delete invert0, invert1, invert2, invert3;
     delete invert4, invert5, invert6, invert7;
     delete invert8, invert9;
+    delete nand0,nand1,nand2,nand3;
     delete flipFlop0, flipFlop1, flipFlop2, flipFlop3;
     delete modRateCountProm0;
     delete delayProms0;

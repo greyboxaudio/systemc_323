@@ -1,6 +1,6 @@
 #include "comparator.h"
 
-    void comparator::func(void)
+    void comparator::comparator_main(void)
     {
         sc_uint<8> inputA = inp0.read();
         sc_uint<8> inputB = inp1.read() << 1;

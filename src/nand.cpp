@@ -1,5 +1,8 @@
 #include "nand.h"
-    void bitNAND::bitNAND_main(void)
+    void nand::nand_main(void)
     {
-        outp0.write(!(inp0.read() & inp1.read()));
+        bool a = inp0.read();
+        bool b = inp1.read();
+        bool y = ~(a & b);
+        outp0.write(y);
     }
