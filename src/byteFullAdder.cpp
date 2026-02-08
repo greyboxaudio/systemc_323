@@ -1,11 +1,5 @@
 #include "byteFullAdder.h"
-void byteFullAdder::start_of_simulation(void)
-{
-    sc_uint<8> data = 0;
-    bool carry = 0;
-    outp0.write(data);
-    c4.write(carry);
-}
+
 void byteFullAdder::func(void)
 {
     sc_uint<8> inputA;

@@ -5,6 +5,7 @@ SC_MODULE(delayProms)
     sc_in<sc_uint<8>> inp0,inp1,inp2; //TCB2_7
     sc_in<sc_uint<4>> inp3, inp4;
     sc_out<sc_uint<8>> outp0; //delayData
+    sc_out<sc_uint<16>> outp1;
 
     void dlyData();
 

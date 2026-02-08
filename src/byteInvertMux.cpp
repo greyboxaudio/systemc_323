@@ -1,9 +1,5 @@
 #include "byteInvertMux.h"
-void byteInvertMux::start_of_simulation(void)
-{
-    sc_uint<8> data = 0;
-    outp0.write(data);
-}
+
 void byteInvertMux::func(void)
 {
     sc_uint<8> data_a = inp0.read();

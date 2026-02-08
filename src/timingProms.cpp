@@ -1,25 +1,6 @@
 #include "timingProms.h"
 #include "eproms.h"
-void timingProms::start_of_simulation(void)
-{
-        bool value = 0;
-        outp0.write(value);
-        outp1.write(value);
-        outp2.write(value);
-        outp3.write(value);
-        outp4.write(value);
-        outp5.write(value);
-        outp6.write(value);
-        outp7.write(value);
-        outp8.write(value);
-        outp9.write(value);
-        outp10.write(value);
-        outp11.write(value);
-        outp12.write(value);
-        outp13.write(value);
-        outp14.write(value);
-        outp15.write(value);
-}
+
 void timingProms::func(void)
 {
         sc_uint<8> address = inp0.read();

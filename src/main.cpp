@@ -62,7 +62,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_signal<sc_uint<8>> delayData0, delayData1;
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
-    sc_signal<sc_uint<16>> address2;
+    sc_signal<sc_uint<16>> address2, dlyaddr0;
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData, gain;
     sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, flipFlop2outp, nSelectA, compOutp0;
     sc_signal<bool> debug0, nc0, nc1, nc2, nc3, nc4, nc5;
@@ -242,6 +242,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     delayProms0->inp3(preDelay1);
     delayProms0->inp4(program1);
     delayProms0->outp0(delayData0);
+    delayProms0->outp1(dlyaddr0);
 
     byteReg0 = new byteReg("delayDataReg");
     byteReg0->clk(nTCB1);
@@ -303,6 +304,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, address2, "address2");
     sc_trace(file, rowCarryIn, "rowCarryIn");
     sc_trace(file, rowCarryOut, "rowCarryOut");
+    sc_trace(file, dlyaddr0, "dlyAddress");
     //sc_trace(file, , "");
     
     sc_start(100, SC_US); // start simulation

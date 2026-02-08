@@ -10,6 +10,5 @@ SC_MODULE(octalFlipFlop)
     {
         SC_METHOD(func);
         sensitive << clk.pos();
-        dont_initialize();
     }
 };
