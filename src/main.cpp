@@ -43,6 +43,9 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     byteFullAdder *byteFullAdder0;
     addressMangle *addressMangle0;
     dram *dram0;
+    gainModCtrlProm *gainModCtrlProm0;
+    gainModProm *gainModProm0;
+    gainProm *gainProm0;
 
     sc_clock clk_sig("clk_sig", 122, SC_NS);
     sc_signal<bool> rst_sig;
@@ -210,6 +213,27 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     tim3->outp0(MC0_8);
     tim3->outp1(MC6_12);
 
+    gainModCtrlProm0 = new gainModCtrlProm("gainModCtrlProm");
+    gainModCtrlProm0->ce(nDAC);
+    gainModCtrlProm0->inp0(TCB3_7);
+    gainModCtrlProm0->inp1(MC6_12);
+    gainModCtrlProm0->outp0(gainModCtrlData);
+    gainModCtrlProm0->outp1(nGainModPromEnable);
+
+    gainModProm0 = new gainModProm("gainModProm");
+    gainModProm0->ce(nGainModPromEnable);
+    gainModProm0->inp0(gainModCtrlData);
+    gainModProm0->inp1(MC0_8);
+    gainModProm0->outp0(gainModData);
+
+    gainProm0 = new gainProm("gainProm");
+    gainProm0->ce(nDACX1);
+    gainProm0->inp0(TCB3_7);
+    gainProm0->inp1(decaytime1);
+    gainProm0->inp2(program1);
+    gainProm0->outp0(gainData);
+    gainProm0->outp1(nGSN);
+
     invert9 = new invert("inv_nTCB7");
     invert9->inp0(nTCB7);
     invert9->outp0(TCB7A);
@@ -305,6 +329,12 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, rowCarryIn, "rowCarryIn");
     sc_trace(file, rowCarryOut, "rowCarryOut");
     sc_trace(file, dlyaddr0, "dlyAddress");
+    sc_trace(file, MC0_8, "MC0_8");
+    sc_trace(file, nGainModPromEnable, "nGainModPromEnable");
+    sc_trace(file, nGSN, "nGSN");
+    sc_trace(file, gainModCtrlData, "gainModCtrlData");
+    sc_trace(file, gainModData, "gainModData");
+    sc_trace(file, gainData, "gainData");
     //sc_trace(file, , "");
     
     sc_start(100, SC_US); // start simulation
@@ -325,6 +355,9 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     delete byteFullAdder0;
     delete addressMangle0;
     delete dram0;
+    delete gainModCtrlProm0;
+    delete gainModProm0;
+    delete gainProm0;
 
     return 0;
 };

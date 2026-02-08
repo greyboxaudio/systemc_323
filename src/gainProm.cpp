@@ -2,13 +2,14 @@
 #include "eproms.h"
 void gainProm::gainProm_main(void)
 {
-    sc_uint<16> promAddress = (address0.read() >> 1) + ((address1.read() << 5) & 224) + (address2.read() << 8) + (address1.read()[3] << 12);
-    sc_uint<8> promData{};
-    if (chipEnable.read() == 0 && outpEnable.read() == 0)
+    sc_uint<16> address = inp0.read() + ((inp1.read() & 0x7) << 5) + (inp2.read() << 8) + ((inp0.read() & 0x8) << 12);
+    sc_uint<8> data;
+    bool enable = ce.read();
+
+    if (!enable)
     {
-        promData = d0806_626[promAddress];
-        //promData = d0806[promAddress];
+        data = d0806_626[address];
     }
-    outp0.write(promData);
-    outp1.write(promData[7]);
+    outp0.write(data & 0x7f);
+    outp1.write(data[7]);
 }

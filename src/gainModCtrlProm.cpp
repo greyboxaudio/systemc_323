@@ -2,12 +2,14 @@
 #include "eproms.h"
 void gainModCtrlProm::gainModCtrlProm_main(void)
 {
-    sc_uint<16> promAddress = (address0.read() >> 1) + ((address1.read() << 5) & 4064);
-    sc_uint<8> promData{};
-    if (chipEnable.read() == 0 && outpEnable.read() == 0)
+    sc_uint<16> address = inp0.read() + (inp1.read() << 5);
+    sc_uint<8> data{};
+    bool enable = ce.read();
+    
+    if (!enable)
     {
-        promData = d0804[promAddress];
+        data = d0804[address];
     }
-    outp0.write(promData);
-    outp1.write(promData[3]);
+    outp0.write(data & 0x7);
+    outp1.write(data[3]);
 }
