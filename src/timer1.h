@@ -5,7 +5,7 @@ SC_MODULE(timer1)
     sc_out<sc_uint<8>> outp0, outp1;
     sc_out<bool> outp2, outp3;
 
-    sc_uint<8> tim_val;
+    sc_uint<16> tim_val;
     bool clr_flag;
 
     void timer1_main();

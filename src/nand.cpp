@@ -3,6 +3,6 @@
     {
         bool a = inp0.read();
         bool b = inp1.read();
-        bool y = ~(a & b);
+        bool y = !(a & b);
         outp0.write(y);
     }

@@ -6,6 +6,6 @@ void flipFlop::flipFlop_main(void)
     {
         bool q = inp0.read();
         outp0.write(q);
-        outp1.write(~q);
+        outp1.write(!q);
     }
 }

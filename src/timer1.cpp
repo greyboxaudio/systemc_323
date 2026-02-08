@@ -10,7 +10,7 @@ void timer1::timer1_main(void)
     {
         tim_val = 0;
     }
-    outp0.write(tim_val);
+    outp0.write(tim_val & 0xff);
     outp1.write(tim_val >> 1);
     outp2.write(tim_val[0]);
     outp3.write(tim_val[5]);
