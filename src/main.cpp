@@ -390,7 +390,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     delete invert4, invert5, invert6, invert7;
     delete invert8, invert9;
     delete nand0,nand1,nand2,nand3;
-    delete flipFlop0, flipFlop1, flipFlop2, flipFlop3;
+    delete flipFlop0, flipFlop1, flipFlop2, flipFlop3,flipFlop4;
     delete modRateCountProm0;
     delete delayProms0;
     delete byteReg0;
@@ -401,6 +401,8 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     delete gainModCtrlProm0;
     delete gainModProm0;
     delete gainProm0;
+    delete latchedMux0;
+    delete comparator0;
 
     return 0;
 };
