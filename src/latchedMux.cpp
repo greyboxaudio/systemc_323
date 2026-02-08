@@ -2,13 +2,13 @@
 
     void latchedMux::latchedMux_prc(void)
     {
-        sc_uint<8> byte1 = inp0.read();
-        sc_uint<8> byte2 = inp1.read() << 1;
+        sc_uint<8> inputA = inp0.read();
+        sc_uint<8> inputB = inp1.read() << 1;
         bool byteSelect = sel.read();
         if (byteSelect)
         {
-            outp0.write(byte1);
+            outp0.write(inputB);
         }else{
-            outp0.write(byte2);
+            outp0.write(inputA);
         }
     }
