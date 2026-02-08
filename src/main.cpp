@@ -343,6 +343,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, clk_sig, "sysclk");
     sc_trace(file, TC0_7, "TC0_7");
     sc_trace(file, TCB2_7, "TCB2_7");
+    sc_trace(file, TCB3_7, "TCB3_7");
     sc_trace(file, nTCB1, "nTCB1");
     sc_trace(file, nDDTCB1, "nDDTCB1");
     sc_trace(file, TCB2, "TCB2");
@@ -372,6 +373,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, rowCarryOut, "rowCarryOut");
     sc_trace(file, dlyaddr0, "dlyAddress");
     sc_trace(file, MC0_8, "MC0_8");
+    sc_trace(file, MC6_12, "MC6_12");
     sc_trace(file, nGainModPromEnable, "nGainModPromEnable");
     sc_trace(file, nGSN, "nGSN");
     sc_trace(file, gainModCtrlData, "gainModCtrlData");
@@ -383,6 +385,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, compOutp, "A<B");
     sc_trace(file, gainFlipFlopOut, "gainFlipFlopOut");
     sc_trace(file, TCB1, "TCB1");
+    sc_trace(file, nDAC, "nDAC");
     //sc_trace(file, , "");
     
     sc_start(100, SC_US); // start simulation
