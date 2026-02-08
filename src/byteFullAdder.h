@@ -6,6 +6,7 @@ SC_MODULE(byteFullAdder)
     sc_out<bool> c4;
     sc_out<sc_uint<8>> outp0;
 
+    void start_of_simulation(void) override;
     void func();
 
     SC_CTOR(byteFullAdder)

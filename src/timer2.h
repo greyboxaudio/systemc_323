@@ -13,5 +13,6 @@ SC_MODULE(timer2)
     {
         SC_METHOD(timer2_main);
         sensitive<< clk.pos();
+        dont_initialize();
     }
 };

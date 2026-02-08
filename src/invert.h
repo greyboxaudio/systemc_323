@@ -11,5 +11,6 @@ SC_MODULE(invert)
     {
         SC_METHOD(invert_main);
         sensitive << inp0;
+        dont_initialize();
     }
 };

@@ -11,5 +11,6 @@ SC_MODULE(flipFlop)
     {
         SC_METHOD(flipFlop_main);
         sensitive << clk.pos();
+        dont_initialize();
     }
 };

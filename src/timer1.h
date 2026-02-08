@@ -8,7 +8,6 @@ SC_MODULE(timer1)
     sc_uint<8> tim_val;
     bool clr_flag;
 
-    void start_of_simulation( void ) override;
     void timer1_main();
     void tim1_clr();
 
@@ -16,7 +15,9 @@ SC_MODULE(timer1)
     {
         SC_METHOD(timer1_main);
         sensitive<< clk.pos();
+        dont_initialize();
         SC_METHOD(tim1_clr);
         sensitive<< clr;
+        dont_initialize();
     }
 };

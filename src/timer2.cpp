@@ -2,6 +2,7 @@
 
 void timer2::timer2_main(void)
 {
+    tim_val += 1;
     bool carry = tim_val[4];
     if (ld_flag == 0)
     {
@@ -9,5 +10,4 @@ void timer2::timer2_main(void)
     }
     outp0.write(carry);
     ld_flag = ld.read();
-    tim_val += 1;
 }

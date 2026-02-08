@@ -5,10 +5,16 @@ SC_MODULE(byteReg)
     sc_in<sc_uint<8>> inp0;
     sc_out<sc_uint<8>> outp0;
 
-    void latch();
+    sc_uint<8> data;
+
+    void start_of_simulation(void) override;
+    void read(void);
+    void latch(void);
 
     SC_CTOR(byteReg)
     {
+        SC_METHOD(read);
+        sensitive << inp0;
         SC_METHOD(latch);
         sensitive << clk.pos();
     }

@@ -6,6 +6,7 @@ SC_MODULE(byteInvertMux)
     sc_in<sc_uint<8>> inp1;
     sc_out<sc_uint<8>> outp0;
 
+    void start_of_simulation(void) override;
     void func();
 
     SC_CTOR(byteInvertMux)

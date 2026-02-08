@@ -12,5 +12,6 @@ SC_MODULE(timingProms)
     {
         SC_METHOD(func);
         sensitive << inp0;
+        dont_initialize();
     }
 };

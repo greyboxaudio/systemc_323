@@ -1,16 +1,5 @@
 #include "octalFlipFlop.h"
-void octalFlipFlop::start_of_simulation( void )
-{
-    bool value = 0;
-        outp0.write(value);
-        outp1.write(value);
-        outp2.write(value);
-        outp3.write(value);
-        outp4.write(value);
-        outp5.write(value);
-        outp6.write(value);
-        outp7.write(value);
-}
+
     void octalFlipFlop::func(void){
         outp0.write(inp0.read());
         outp1.write(inp1.read());

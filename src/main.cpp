@@ -214,16 +214,16 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     invert9->inp0(nTCB7);
     invert9->outp0(TCB7A);
 
+    tim4 = new timer4("writeAddrCounter");
+    tim4->clk(TCB7);
+    tim4->outp0(nROW);
+    tim4->outp1(nCOLUMN);
+
     byteInvertMux0 = new byteInvertMux("rowColumnMux");
     byteInvertMux0->sel(TCB2);
     byteInvertMux0->inp0(nROW);
     byteInvertMux0->inp1(nCOLUMN);
     byteInvertMux0->outp0(writeAddrData);
-
-    tim4 = new timer4("writeAddrCounter");
-    tim4->clk(TCB7);
-    tim4->outp0(nROW);
-    tim4->outp1(nCOLUMN);
 
     invert7 = new invert("inv_nMOD");
     invert7->inp0(nMOD1);

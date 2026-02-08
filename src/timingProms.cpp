@@ -1,8 +1,8 @@
 #include "timingProms.h"
 #include "eproms.h"
-void timingProms::start_of_simulation( void )
+void timingProms::start_of_simulation(void)
 {
-    bool value = 0;
+        bool value = 0;
         outp0.write(value);
         outp1.write(value);
         outp2.write(value);

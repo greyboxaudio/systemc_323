@@ -1,14 +1,4 @@
 #include "timer1.h"
-void timer1::start_of_simulation(void)
-{
-    sc_uint<8> value = 0;
-    outp0.write(value);
-    outp1.write(value);
-    outp2.write(value[0]);
-    outp3.write(value[0]);
-    tim_val = 0;
-    clr_flag = 0;
-}
 void timer1::tim1_clr(void)
 {
     clr_flag = clr.read();
