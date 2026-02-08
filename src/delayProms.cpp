@@ -1,9 +1,6 @@
 #include "delayProms.h"
 #include "eproms.h"
-void delayProms::start_of_simulation( void ){
-    sc_uint<8> value = 0;
-    outp0.write(value);
-}
+
 void delayProms::dlyData(void)
 {
     sc_uint<16> address;
@@ -12,13 +9,13 @@ void delayProms::dlyData(void)
     bool enable1 = ce1.read();
     if (!enable1)
     {
-        address = inp0.read() + (inp1.read() << 5);
-        data = d0807[address];
+        address = inp2.read() + ((inp3.read() & 0x07) << 6) + ((inp4.read() & 0x07) << 9) + ((inp3.read() & 0x08) << 12) + ((inp4.read() & 0x08) << 13);
+        data = d0808_626[address];
     }
     if (!enable0)
     {
-        address = inp2.read() + ((inp3.read() & 0x07) << 6) + ((inp4.read() & 0x07) << 9) + ((inp3.read() & 0x08) << 12) + ((inp4.read() & 0x08) << 13);
-        data = d0808_626[address];
+        address = inp0.read() + (inp1.read() << 5);
+        data = d0807[address];
     }
     outp0.write(data);
 }

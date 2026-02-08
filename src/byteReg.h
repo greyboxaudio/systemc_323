@@ -7,7 +7,6 @@ SC_MODULE(byteReg)
 
     sc_uint<8> data;
 
-    void start_of_simulation(void) override;
     void read(void);
     void latch(void);
 

@@ -12,5 +12,6 @@ SC_MODULE(latchedMux)
     {
         SC_METHOD(func);
         sensitive << clk.neg();
+        dont_initialize();
     }
 };
