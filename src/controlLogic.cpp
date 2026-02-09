@@ -1,5 +1,5 @@
 #include "controlLogic.h"
-    void controlLogic::program_func(void)
+    void controlLogic::controlLogic_pgm(void)
     {
         // read input as gray code binary
         sc_uint<4> index = programInp.read();
@@ -8,7 +8,7 @@
         num[2] = num[2] ^ num[3];
         programOutp.write(num);
     }
-    void controlLogic::predelay_func(void)
+    void controlLogic::controlLogic_pdly(void)
     {
         // read input as gray code binary
         sc_uint<4> index = predelayInp.read();
@@ -16,7 +16,7 @@
         predelayOutp.write(num);
     }
 
-    void controlLogic::decaytime_func(void)
+    void controlLogic::controlLogic_decay(void)
     {
         // read input as gray code binary
         sc_uint<4> index = decaytimeInp.read();

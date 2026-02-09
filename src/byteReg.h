@@ -7,14 +7,14 @@ SC_MODULE(byteReg)
 
     sc_uint<8> data;
 
-    void read(void);
-    void latch(void);
+    void byteReg_read(void);
+    void byteReg_latch(void);
 
     SC_CTOR(byteReg)
     {
-        SC_METHOD(read);
+        SC_METHOD(byteReg_read);
         sensitive << inp0;
-        SC_METHOD(latch);
+        SC_METHOD(byteReg_latch);
         sensitive << clk.pos();
     }
 };

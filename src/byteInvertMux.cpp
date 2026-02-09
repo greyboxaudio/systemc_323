@@ -1,6 +1,6 @@
 #include "byteInvertMux.h"
 
-void byteInvertMux::func(void)
+void byteInvertMux::byteInvertMux_main(void)
 {
     sc_uint<8> data_a = inp0.read();
     sc_uint<8> data_b = inp1.read();

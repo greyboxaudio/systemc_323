@@ -1,7 +1,7 @@
 #include "timingProms.h"
 #include "eproms.h"
 
-void timingProms::func(void)
+void timingProms::timingProms_main(void)
 {
         sc_uint<8> address = inp0.read();
         sc_uint<8> data0 = d0810[address];

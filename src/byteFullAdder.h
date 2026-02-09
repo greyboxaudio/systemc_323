@@ -6,11 +6,11 @@ SC_MODULE(byteFullAdder)
     sc_out<bool> c4;
     sc_out<sc_uint<8>> outp0;
 
-    void func();
+    void byteFullAdder_main();
 
     SC_CTOR(byteFullAdder)
     {
-        SC_METHOD(func);
+        SC_METHOD(byteFullAdder_main);
         sensitive << inp0 << inp1 << c0;
     }
 };

@@ -1,7 +1,7 @@
 #include "delayProms.h"
 #include "eproms.h"
 
-void delayProms::dlyData(void)
+void delayProms::dlyProms_main(void)
 {
     sc_uint<16> address;
     sc_uint<8> data;

@@ -1,6 +1,6 @@
 #include "byteFullAdder.h"
 
-void byteFullAdder::func(void)
+void byteFullAdder::byteFullAdder_main(void)
 {
     sc_uint<8> inputA;
     sc_uint<8> inputB;

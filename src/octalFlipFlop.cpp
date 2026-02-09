@@ -1,20 +1,21 @@
 #include "octalFlipFlop.h"
 
-    void octalFlipFlop::func(void){
-        bool data = inp0.read();
-        outp0.write(data);
-        data = inp1.read();
-        outp1.write(data);
-        data = inp2.read();
-        outp2.write(data);
-        data = inp3.read();
-        outp3.write(data);
-        data = inp4.read();
-        outp4.write(data);
-        data = inp5.read();
-        outp5.write(data);
-        data = inp6.read();
-        outp6.write(data);
-        data = inp7.read();
-        outp7.write(data);
+    void octalFlipFlop::octalFlipFlop_main(void){
+        bool data0 = inp0.read();
+        bool data1 = inp1.read();
+        bool data2 = inp2.read();
+        bool data3 = inp3.read();
+        bool data4 = inp4.read();
+        bool data5 = inp5.read();
+        bool data6 = inp6.read();
+        bool data7 = inp7.read();
+
+        outp0.write(data0);
+        outp1.write(data1);
+        outp2.write(data2);
+        outp3.write(data3);
+        outp4.write(data4);
+        outp5.write(data5);
+        outp6.write(data6);
+        outp7.write(data7);
     }

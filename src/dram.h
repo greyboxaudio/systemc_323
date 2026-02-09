@@ -8,14 +8,14 @@ SC_MODULE(dram)
     sc_uint<8> row_addr;
     sc_uint<8> col_addr;
 
-    void row_reg();
-    void col_reg();
+    void dram_strobeRow();
+    void dram_strobeCol();
 
     SC_CTOR(dram)
     {
-        SC_METHOD(row_reg);
+        SC_METHOD(dram_strobeRow);
         sensitive << ras.pos();
-        SC_METHOD(col_reg);
+        SC_METHOD(dram_strobeCol);
         sensitive << cas.pos();
     }
 };

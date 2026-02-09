@@ -4,11 +4,11 @@ SC_MODULE(octalFlipFlop)
     sc_in<bool> clk, inp0, inp1, inp2, inp3, inp4, inp5, inp6, inp7;
     sc_out<bool> outp0, outp1, outp2, outp3, outp4, outp5, outp6, outp7;
 
-    void func();
+    void octalFlipFlop_main();
 
     SC_CTOR(octalFlipFlop)
     {
-        SC_METHOD(func);
+        SC_METHOD(octalFlipFlop_main);
         sensitive << clk.pos();
     }
 };

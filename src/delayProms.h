@@ -7,11 +7,11 @@ SC_MODULE(delayProms)
     sc_out<sc_uint<8>> outp0; //delayData
     sc_out<sc_uint<16>> outp1;
 
-    void dlyData();
+    void dlyProms_main();
 
     SC_CTOR(delayProms)
     {
-        SC_METHOD(dlyData);
+        SC_METHOD(dlyProms_main);
         sensitive << ce0 << ce1 << inp0 << inp1 << inp2 << inp3 << inp4;
     }
 };
