@@ -16,6 +16,5 @@ void latchedMux::latchedMux_read(void)
 }
 void latchedMux::latchedMux_latch(void)
 {
-
     outp0.write(data);
 }
