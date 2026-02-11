@@ -70,10 +70,10 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_signal<sc_uint<8>> delayData0, delayData1;
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
-    sc_signal<sc_uint<16>> address2, dlyaddr0;
+    sc_signal<sc_uint<16>> address2, dlyaddr0, debug0;
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData, gain;
     sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, nSelectA, compOutp;
-    sc_signal<bool, SC_MANY_WRITERS> debug0, nc0, nc1, nc2, nc3, nc4, nc5;
+    sc_signal<bool, SC_MANY_WRITERS> nc0, nc1, nc2, nc3, nc4, nc5;
 
     program0 = 15;
     preDelay0 = 8;
@@ -238,6 +238,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     gainProm0->inp2(program1);
     gainProm0->outp0(gainData);
     gainProm0->outp1(nGSN);
+    gainProm0->outp2(debug0);
 
     nand0 = new nand("nand0");
     nand0->inp0(nGainModPromEnable);
@@ -393,6 +394,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, nER1, "nER");
     sc_trace(file, nET1, "nET");
     sc_trace(file, ISH1, "nISH");
+    sc_trace(file, debug0, "gainAddress");
     //sc_trace(file, , "");
     
     sc_start(100, SC_US); // start simulation

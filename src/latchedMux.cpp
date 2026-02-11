@@ -3,7 +3,7 @@
     void latchedMux::latchedMux_prc(void)
     {
         sc_uint<8> inputA = inp0.read();
-        sc_uint<8> inputB = inp1.read() << 1;
+        sc_uint<8> inputB = (inp1.read() & 0x7f) << 1;
         bool byteSelect = sel.read();
         if (byteSelect)
         {

@@ -3,11 +3,13 @@
     void comparator::comparator_main(void)
     {
         sc_uint<8> inputA = inp0.read();
-        sc_uint<8> inputB = inp1.read() << 1;
+        sc_uint<8> inputB = (inp1.read() & 0x7f) << 1;
+        bool comp;
         if (inputA < inputB)
-        {
-            outp0.write(1);
+        {   
+            comp = 1;
         }else{
-            outp0.write(0);
+            comp = 0;
         }
+        outp0.write(comp);
     }

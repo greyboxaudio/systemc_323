@@ -6,6 +6,7 @@ SC_MODULE(gainProm)
     sc_in<sc_uint<4>> inp1, inp2;
     sc_out<sc_uint<8>> outp0;
     sc_out<bool> outp1;
+    sc_out<sc_uint<16>> outp2;
 
     void gainProm_main();
 
