@@ -5,6 +5,7 @@ SC_MODULE(gainModProm)
     sc_in<sc_uint<8>> inp0;
     sc_in<sc_uint<16>> inp1;
     sc_out<sc_uint<8>> outp0; //gainModData
+    sc_out<sc_uint<16>> outp1;
 
     void gainModProm_main();
 
