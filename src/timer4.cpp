@@ -8,4 +8,5 @@ void timer4::timer4_main(void)
     }
     outp0.write(tim_val & 0xff);
     outp1.write(tim_val >> 8);
+    outp2.write(tim_val);
 }

@@ -3,6 +3,7 @@ SC_MODULE(timer4)
 {
     sc_in<bool> clk;
     sc_out<sc_uint<8>> outp0, outp1;
+    sc_out<sc_uint<16>> outp2;
 
     sc_uint<16> tim_val;
 

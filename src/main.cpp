@@ -70,7 +70,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_signal<sc_uint<8>> delayData0, delayData1;
     sc_signal<bool> pullHigh, pullLow;
     sc_signal<sc_uint<8>> address0, address1;
-    sc_signal<sc_uint<16>> address2, dlyaddr0, debug0, debug1;
+    sc_signal<sc_uint<16>> address2, dlyaddr0, debug0, debug1, debug2;
     sc_signal<sc_uint<8>> gainModCtrlData, gainModData, gainData, gain;
     sc_signal<bool> nGainModPromEnable, gainModPromEnabled, nGSN, nGainLatch, nSelectA, compOutp;
     sc_signal<bool, SC_MANY_WRITERS> nc0, nc1, nc2, nc3, nc4, nc5;
@@ -187,6 +187,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     modRateCountProm0->inp0(ratlvl);
     modRateCountProm0->inp1(program1);
     modRateCountProm0->outp0(modRateCountData);
+    modRateCountProm0->outp1(MODDIS);
 
     tim2 = new timer2("modRateCounter");
     tim2->clk(TCB7);
@@ -220,6 +221,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
 
     gainModCtrlProm0 = new gainModCtrlProm("gainModCtrlProm");
     gainModCtrlProm0->ce(nDAC);
+    gainModCtrlProm0->oe(MODDIS);
     gainModCtrlProm0->inp0(TCB3_7);
     gainModCtrlProm0->inp1(MC6_12);
     gainModCtrlProm0->outp0(gainModCtrlData);
@@ -288,6 +290,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     tim4->clk(TCB7);
     tim4->outp0(nROW);
     tim4->outp1(nCOLUMN);
+    tim4->outp2(debug2);
 
     byteInvertMux0 = new byteInvertMux("rowColumnMux");
     byteInvertMux0->sel(TCB2);
@@ -305,6 +308,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
 
     delayProms0 = new delayProms("delayProms0");
     delayProms0->ce0(nMODB);
+    delayProms0->oe0(MODDIS);
     delayProms0->ce1(MOD);
     delayProms0->inp0(TCB3_7);
     delayProms0->inp1(MC6_12);
@@ -363,6 +367,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, MSBE1, "MSBE");
     sc_trace(file, DAC1, "DAC");
     sc_trace(file, nMOD1, "nMOD");
+    sc_trace(file, MODDIS, "MODDIS");
     sc_trace(file, nSyncClear1, "nSYNCCLEAR");
     sc_trace(file, nDACX1, "nDACX");
     sc_trace(file, delayData0, "delayData0");
@@ -400,6 +405,7 @@ int sc_main(int argc, char *argv[]) // declare systemc main function as int, so 
     sc_trace(file, program1, "program1");
     sc_trace(file, decaytime1, "decay1");
     sc_trace(file, preDelay1, "preDelay1");
+    sc_trace(file, debug2, "cycleCounter");
     //sc_trace(file, , "");
     
     sc_start(100, SC_US); // start simulation

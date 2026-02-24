@@ -6,6 +6,7 @@ void delayProms::dlyProms_main(void)
     sc_uint<16> address;
     sc_uint<8> data;
     bool enable0 = ce0.read();
+    bool outpEnable0 = oe0.read();
     bool enable1 = ce1.read();
     if (!enable1)
     {
@@ -18,7 +19,13 @@ void delayProms::dlyProms_main(void)
     {
         address = inp0.read() + (inp1.read() << 5);
         data = d0807[address];
+    }
+    if (!outpEnable0)
+    {
         outp0.write(data);
         outp1.write(address);
+    }else{
+        outp0.write(0);
     }
+    
 }
